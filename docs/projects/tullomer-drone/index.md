@@ -14,12 +14,6 @@ hero:
 deep_dives: []
 ---
 
-# Tullomer Drone
-
-<div class="fact-strip" markdown>
-**Duration** July - Sept 2026 · **Role** Solo R&D at Z Polymers
-</div>
-
 !!! abstract "TL;DR"
     *One sentence of impact, ideally with a number.*
 

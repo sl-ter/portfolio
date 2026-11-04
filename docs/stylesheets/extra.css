@@ -1,27 +1,482 @@
-/* Project summary pages */
-.md-typeset .hero {
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap");
+
+/* ---------- Tokens ---------- */
+:root {
+  --pf-orange: #ff4f00;            /* international orange: fills, rules, the hero callout */
+  --pf-graphite: #1c2025;
+  --pf-graphite-2: #262b32;
+  --pf-on-dark: #eef0f3;
+  --pf-headline: "IBM Plex Sans Condensed", var(--md-text-font-family, sans-serif);
+  --pf-radius: 0.4rem;
+}
+
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: var(--pf-graphite);
+  --md-primary-fg-color--light: var(--pf-graphite-2);
+  --md-primary-fg-color--dark: #121518;
+  --md-primary-bg-color: var(--pf-on-dark);
+  --md-primary-bg-color--light: rgba(238, 240, 243, 0.7);
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color: var(--pf-orange);
+  --md-accent-fg-color--transparent: rgba(255, 79, 0, 0.1);
+  --md-accent-bg-color: #14161a;
+}
+
+/* Link colours are darkened/lightened from the accent to pass AA contrast for body text */
+[data-md-color-scheme="default"] {
+  --md-typeset-a-color: #b83a00;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 215;
+  --md-typeset-a-color: #ff8a52;
+}
+
+/* ---------- Type ---------- */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: var(--pf-headline);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset h1 {
+  font-size: 2.4em;
+  line-height: 1.1;
+}
+
+/* Primary buttons sit on the accent everywhere, not the graphite primary */
+.md-typeset .md-button--primary {
+  background-color: var(--pf-orange);
+  border-color: var(--pf-orange);
+  color: #14161a;
+}
+
+.md-typeset .md-button--primary:is(:hover, :focus) {
+  background-color: #ff6a26;
+  border-color: #ff6a26;
+  color: #14161a;
+}
+
+/* ---------- Home: hero ---------- */
+.pf-hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: min(80vh, 44rem);
+  background: var(--pf-graphite);
+  color: var(--pf-on-dark);
+}
+
+.pf-hero__layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.pf-hero__layer svg {
   width: 100%;
-  max-height: 26rem;
-  object-fit: cover;
-  border-radius: 0.4rem;
+  height: 100%;
 }
 
-.md-typeset .fact-strip {
-  padding: 0.5rem 0.8rem;
-  border-left: 0.2rem solid var(--md-accent-fg-color);
+.pf-hero__grid line {
+  stroke: rgba(255, 255, 255, 0.035);
+  stroke-width: 1;
+}
+
+.pf-hero__grid line.major {
+  stroke: rgba(255, 255, 255, 0.07);
+}
+
+.pf-hero__drawing {
+  --line: rgba(222, 228, 236, 0.62);
+  --thin: rgba(222, 228, 236, 0.38);
+}
+
+.pf-hero__drawing .draw {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.8;
+}
+
+.pf-hero__drawing .center {
+  fill: none;
+  stroke: var(--thin);
+  stroke-width: 1;
+  stroke-dasharray: 30 6 4 6;
+}
+
+.pf-hero__drawing :is(.dim, .ext) {
+  fill: none;
+  stroke: var(--thin);
+  stroke-width: 1;
+}
+
+.pf-hero__drawing .cut {
+  stroke: var(--line);
+  stroke-width: 3;
+}
+
+.pf-hero__drawing .head {
+  fill: var(--thin);
+}
+
+.pf-hero__drawing .label {
+  fill: var(--line);
+  font: 500 19px var(--pf-headline);
+}
+
+.pf-hero__drawing .accent {
+  stroke: var(--pf-orange);
+}
+
+.pf-hero__drawing :is(.head, .label).accent {
+  fill: var(--pf-orange);
+  stroke: none;
+}
+
+/* Fade the hero into the page, like Material's landing page */
+.pf-hero__blend {
+  position: absolute;
+  inset: auto 0 0;
+  height: 35%;
+  background: linear-gradient(to bottom, transparent, var(--md-default-bg-color));
+  pointer-events: none;
+}
+
+.pf-hero__inner {
+  position: relative;
+  width: 100%;
+}
+
+.pf-hero__content {
+  max-width: 30rem;
+  padding: 3rem 0.8rem 7rem;
+}
+
+.pf-hero .md-typeset h1 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(2.4rem, 7vw, 3.8rem);
+  line-height: 1;
+  color: var(--pf-on-dark);
+}
+
+.pf-hero .md-typeset p {
+  max-width: 26rem;
+  margin: 0 0 1.6rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(238, 240, 243, 0.82);
+}
+
+.pf-hero .md-typeset .md-button:not(.md-button--primary) {
+  border-color: rgba(238, 240, 243, 0.5);
+  color: var(--pf-on-dark);
+}
+
+.pf-hero .md-typeset .md-button:not(.md-button--primary):is(:hover, :focus) {
+  border-color: var(--pf-orange);
+  background: transparent;
+}
+
+/* The single orchestrated moment: the drawing draws itself in once */
+@media (prefers-reduced-motion: no-preference) {
+  .pf-hero__drawing .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: pf-draw 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.15s forwards;
+  }
+
+  .pf-hero__drawing :is(.center, .dim, .ext, .head, .label, .cut) {
+    opacity: 0;
+    animation: pf-fade 0.7s ease 1.3s forwards;
+  }
+}
+
+@keyframes pf-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pf-fade {
+  to { opacity: 1; }
+}
+
+@media screen and (max-width: 45em) {
+  .pf-hero__drawing {
+    opacity: 0.22;
+  }
+}
+
+/* ---------- Home: sections ---------- */
+.pf-section {
+  padding: 2.4rem 0 3.2rem;
+}
+
+.pf-section > .md-grid {
+  padding: 0 0.8rem;
+}
+
+.pf-section--alt {
   background: var(--md-code-bg-color);
-  font-size: 0.75rem;
 }
 
+.pf-section.md-typeset h2 {
+  margin: 0 0 1.2rem;
+  font-size: 1.6rem;
+}
+
+.md-typeset .pf-meta {
+  margin: 0.2rem 0 0.6rem;
+  font-size: 0.7rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .pf-more {
+  font-weight: 600;
+}
+
+.md-typeset .pf-more::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.35em;
+  transition: transform 200ms ease;
+}
+
+.md-typeset .pf-more:is(:hover, :focus)::after {
+  transform: translateX(0.25em);
+}
+
+/* Spotlights: alternating media / text, the way Material's landing page does features */
+.pf-spotlight {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 2.4rem;
+  align-items: center;
+  margin: 0 0 2.8rem;
+}
+
+.pf-spotlight:nth-of-type(even) .pf-spotlight__media {
+  order: 2;
+}
+
+.pf-spotlight__media,
+.pf-card__media {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--pf-radius);
+}
+
+.pf-spotlight__media img,
+.pf-card__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.pf-spotlight__media:hover img,
+.pf-card a:is(:hover, :focus) img {
+  transform: scale(1.03);
+}
+
+.md-typeset .pf-spotlight h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.md-typeset .pf-spotlight h3 a {
+  color: inherit;
+}
+
+@media screen and (max-width: 60em) {
+  .pf-spotlight {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .pf-spotlight:nth-of-type(even) .pf-spotlight__media {
+    order: 0;
+  }
+}
+
+/* Placeholder until a project has a hero image: a drafting-sheet panel */
+.pf-placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  background-color: var(--pf-graphite);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: rgba(238, 240, 243, 0.55);
+  font: 600 1.1rem var(--pf-headline);
+}
+
+.pf-placeholder--card {
+  font-size: 0.85rem;
+}
+
+/* Project cards */
+.md-typeset ul.pf-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset ul.pf-cards > li {
+  margin: 0;
+}
+
+.md-typeset .pf-card a {
+  display: block;
+  color: inherit;
+}
+
+.md-typeset .pf-card h3 {
+  margin: 0.7rem 0 0;
+  font-size: 1rem;
+  transition: color 200ms ease;
+}
+
+.md-typeset .pf-card a:is(:hover, :focus) h3 {
+  color: var(--md-typeset-a-color);
+}
+
+.md-typeset .pf-card p:not(.pf-meta) {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+/* Skill chips on the home page, styled to match Material's tags */
+.md-typeset ul.pf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset ul.pf-chips > li {
+  margin: 0;
+  padding: 0.2em 0.8em;
+  border-radius: 2em;
+  background: var(--md-default-fg-color--lightest);
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+
+.pf-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+}
+
+@media screen and (max-width: 45em) {
+  .pf-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.md-typeset ul.pf-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset ul.pf-links > li {
+  margin: 0 0 0.4rem;
+}
+
+/* ---------- Project pages ---------- */
+.pf-project {
+  margin-bottom: 1.6rem;
+}
+
+.pf-project__hero {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin-bottom: 1.2rem;
+  border-radius: var(--pf-radius);
+}
+
+.md-typeset .pf-project h1 {
+  margin: 0 0 0.5rem;
+}
+
+.md-typeset .pf-project__tagline {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .pf-project__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2.4rem;
+  margin: 0 0 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset .pf-project__facts dt {
+  margin: 0;
+  font-size: 0.64rem;
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .pf-project__facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.md-typeset .pf-project .md-tags {
+  margin-bottom: 0;
+}
+
+/* TL;DR: a lead callout on the accent rule instead of Material's stock blue */
+.md-typeset .admonition.abstract {
+  border: 0;
+  border-left: 0.2rem solid var(--pf-orange);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--md-accent-fg-color--transparent);
+  font-size: 0.8rem;
+}
+
+.md-typeset .abstract > .admonition-title {
+  background: transparent;
+  font-family: var(--pf-headline);
+}
+
+.md-typeset .abstract > .admonition-title::before {
+  background-color: var(--pf-orange);
+}
+
+/* Results metric cards (optional block in Labor & Results) */
 .md-typeset .metrics strong {
   display: block;
-  font-size: 1.6rem;
-  color: var(--md-accent-fg-color);
+  font: 600 1.8rem var(--pf-headline);
+  color: var(--md-typeset-a-color);
 }
 
 .md-typeset video {
   width: 100%;
-  border-radius: 0.4rem;
+  border-radius: var(--pf-radius);
 }
 
 /* Media swapped between web and PDF */

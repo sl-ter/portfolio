@@ -1,0 +1,119 @@
+{#- Landing page. Project content comes from each project's front matter, in nav order. -#}
+{% extends "main.html" %}
+
+{#- The first N projects in nav order get spotlight blocks; the rest go in the grid. -#}
+{% set featured_count = 2 %}
+
+{% set projects = [] %}
+{% for item in nav.items if item.title == "Projects" %}
+  {% for child in item.children if child.is_page and child.meta and "duration" in child.meta %}
+    {% set _ = projects.append(child) %}
+  {% endfor %}
+{% endfor %}
+
+{% macro media(p, size) %}
+  {% if p.meta.hero %}
+    <img src="{{ (p.url ~ p.meta.hero) | url }}" alt="" loading="lazy">
+  {% else %}
+    <div class="pf-placeholder pf-placeholder--{{ size }}" aria-hidden="true">
+      <span>{{ p.title }}</span>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro meta_line(p) %}
+  {%- set bits = [] -%}
+  {%- if p.meta.duration %}{% set _ = bits.append(p.meta.duration) %}{% endif -%}
+  {%- if p.meta.role %}{% set _ = bits.append(p.meta.role) %}{% endif -%}
+  {{ bits | join(" · ") }}
+{% endmacro %}
+
+{% block tabs %}
+  {{ super() }}
+  <style>
+    /* Landing page: static header, full-bleed sections, no Markdown body or sidebars */
+    .md-header { position: initial; }
+    .md-main__inner { margin: 0; }
+    .md-content { display: none; }
+    @media screen and (min-width: 60em) { .md-sidebar--secondary { display: none; } }
+    @media screen and (min-width: 76.25em) { .md-sidebar--primary { display: none; } }
+  </style>
+
+  <section class="pf-hero">
+    <div class="pf-hero__layer" data-depth="0.12">{% include "partials/hero-grid.html" %}</div>
+    <div class="pf-hero__layer" data-depth="0.32">{% include "partials/hero-drawing.html" %}</div>
+    <div class="pf-hero__blend"></div>
+    <div class="md-grid pf-hero__inner">
+      <div class="pf-hero__content md-typeset" data-depth="-0.08">
+        <h1>Sam Linnington</h1>
+        <p>{{ config.site_description }}</p>
+        <a href="{{ 'projects/' | url }}" class="md-button md-button--primary">See the projects</a>
+        <a href="{{ 'pdf-builder/' | url }}" class="md-button">Build a PDF</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pf-section md-typeset">
+    <div class="md-grid">
+      <h2>Selected work</h2>
+      {% for p in projects[:featured_count] %}
+        <article class="pf-spotlight">
+          <a class="pf-spotlight__media" href="{{ p.url | url }}" tabindex="-1">{{ media(p, "wide") }}</a>
+          <div class="pf-spotlight__body">
+            <h3><a href="{{ p.url | url }}">{{ p.title }}</a></h3>
+            <p class="pf-meta">{{ meta_line(p) }}</p>
+            {% if p.meta.tagline %}<p>{{ p.meta.tagline }}</p>{% endif %}
+            {% if p.meta.skills %}
+              <ul class="pf-chips">
+                {% for s in p.meta.skills[:4] %}<li>{{ s }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+            <a class="pf-more" href="{{ p.url | url }}">Read the case study</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="pf-section pf-section--alt md-typeset">
+    <div class="md-grid">
+      <h2>More projects</h2>
+      <ul class="pf-cards">
+        {% for p in projects[featured_count:] %}
+          <li class="pf-card">
+            <a href="{{ p.url | url }}">
+              <div class="pf-card__media">{{ media(p, "card") }}</div>
+              <h3>{{ p.title }}</h3>
+              <p class="pf-meta">{{ meta_line(p) }}</p>
+              {% if p.meta.tagline %}<p>{{ p.meta.tagline }}</p>{% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <section class="pf-section md-typeset">
+    <div class="md-grid pf-split">
+      <div>
+        <h2>Where I'm heading</h2>
+        <p>
+          Next for my engineering studies: networks and hardware security, building on the
+          embedded and infrastructure work here.
+        </p>
+        <a class="pf-more" href="{{ 'directions/' | url }}">Read about the direction</a>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul class="pf-links">
+          {% for social in config.extra.social %}
+            <li><a href="{{ social.link }}">{{ social.name | d(social.link) }}</a></li>
+          {% endfor %}
+          <li><a href="{{ 'resume/' | url }}">Resume</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}{% endblock %}

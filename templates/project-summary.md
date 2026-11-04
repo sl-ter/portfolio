@@ -1,6 +1,7 @@
 ---
 # Copy to docs/projects/<slug>/index.md. Front matter and sections mirror the vault intake note
-# ("Portfolio - <Project>.md"). `skills` render as chips and feed the Skills page.
+# ("Portfolio - <Project>.md"). The page header (hero, title, tagline, duration, role,
+# skill chips) is rendered from this front matter by overrides/main.html; the body starts at TL;DR.
 title: Project Name
 duration: July - Sept 2026
 role: Your role
@@ -11,14 +12,6 @@ tagline: One sentence of impact, ideally with a number.
 hero: img/hero.jpg
 deep_dives: []
 ---
-
-# Project Name
-
-![Project Name](img/hero.jpg){ .hero }
-
-<div class="fact-strip" markdown>
-**Duration** July - Sept 2026 · **Role** Your role
-</div>
 
 !!! abstract "TL;DR"
     One sentence of impact, ideally with a number.

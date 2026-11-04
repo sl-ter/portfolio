@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{#- Project pages (front matter has `duration`) get a header built from front matter,
+    so the Markdown body starts at the TL;DR. Everything else renders as normal. -#}
+{% block content %}
+  {% if page.meta and "duration" in page.meta %}
+    <header class="pf-project">
+      {% if page.meta.hero %}
+        <img class="pf-project__hero" src="{{ page.meta.hero }}" alt="">
+      {% endif %}
+      <h1>{{ page.title }}</h1>
+      {% if page.meta.tagline %}<p class="pf-project__tagline">{{ page.meta.tagline }}</p>{% endif %}
+      {% if page.meta.duration or page.meta.role %}
+        <dl class="pf-project__facts">
+          {% if page.meta.duration %}<div><dt>Duration</dt><dd>{{ page.meta.duration }}</dd></div>{% endif %}
+          {% if page.meta.role %}<div><dt>Role</dt><dd>{{ page.meta.role }}</dd></div>{% endif %}
+        </dl>
+      {% endif %}
+      {% include "partials/tags.html" %}
+    </header>
+    {{ page.content }}
+    {% include "partials/source-file.html" %}
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}

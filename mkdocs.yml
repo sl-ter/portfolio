@@ -1,39 +1,42 @@
 site_name: Sam Linnington
-site_description: Engineering portfolio — mechanical design, embedded systems, and infrastructure
+site_description: Mechanical engineering student building drones, 3D printers, wearables, and the infrastructure that runs them. Heading toward networks and hardware security.
 site_url: https://sl-ter.github.io/portfolio/
-repo_url: https://github.com/sl-ter/portfolio
-repo_name: sl-ter/portfolio
 copyright: Copyright &copy; 2026 Sam Linnington
 
 theme:
   name: material
+  custom_dir: overrides
   font:
-    text: Inter
-    code: JetBrains Mono
+    text: IBM Plex Sans
+    code: IBM Plex Mono
   icon:
-    logo: material/cog-outline
+    logo: material/ruler-square-compass
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: blue grey
-      accent: deep orange
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: blue grey
-      accent: deep orange
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - navigation.tabs
     - navigation.indexes
     - navigation.footer
     - navigation.top
     - content.code.copy
     - search.highlight
+    - toc.follow
 
 # Built-in plugins only, so the config stays Zensical-compatible.
 plugins:
@@ -70,10 +73,14 @@ extra_css:
   - stylesheets/extra.css
   - stylesheets/print.css
 
+extra_javascript:
+  - javascripts/home.js
+
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/sl-ter
+      name: GitHub
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/samuellinnington/
       name: LinkedIn
