@@ -1,0 +1,105 @@
+site_name: Sam Linnington
+site_description: Engineering portfolio — mechanical design, embedded systems, and infrastructure
+site_url: https://sl-ter.github.io/portfolio/
+repo_url: https://github.com/sl-ter/portfolio
+repo_name: sl-ter/portfolio
+copyright: Copyright &copy; 2026 Sam Linnington
+
+theme:
+  name: material
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    logo: material/cog-outline
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.footer
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+
+# Built-in plugins only, so the config stays Zensical-compatible.
+plugins:
+  - search
+  # Front matter `skills:` drives the chips and the Skills page (same key as the vault intake notes).
+  - tags:
+      tags_name_property: skills
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra_css:
+  - stylesheets/extra.css
+  - stylesheets/print.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sl-ter
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/samuellinnington/
+      name: LinkedIn
+    - icon: fontawesome/solid/award
+      link: https://meritpages.com/samlinnington
+      name: Merit
+    - icon: fontawesome/solid/envelope
+      link: mailto:samuel.linnington@tufts.edu
+      name: Email
+
+# Project order = site order = PDF builder order.
+nav:
+  - Home: index.md
+  - Projects:
+      - projects/index.md
+      - Tullomer Drone: projects/tullomer-drone/index.md
+      - 3D Pellet Printer: projects/pellet-printer/index.md
+      - ME193 Activity Wearable: projects/me193-wearable/index.md
+      - NixOS Config: projects/nixos-config/index.md
+      - MuJoCo on HPC: projects/mujoco-hpc/index.md
+      - EWB Project: projects/ewb/index.md
+      - Mechanism Design: projects/mechanism-design-1/index.md
+      - Aquatic Human-Powered Vehicle: projects/aquatic-hpv/index.md
+  - Skills: skills.md
+  - Certificates: certificates.md
+  - Directions: directions.md
+  - About: about.md
+  - Resume: resume.md
+  - Build a PDF: pdf-builder.md

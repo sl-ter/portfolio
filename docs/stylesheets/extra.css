@@ -1,0 +1,30 @@
+/* Project summary pages */
+.md-typeset .hero {
+  width: 100%;
+  max-height: 26rem;
+  object-fit: cover;
+  border-radius: 0.4rem;
+}
+
+.md-typeset .fact-strip {
+  padding: 0.5rem 0.8rem;
+  border-left: 0.2rem solid var(--md-accent-fg-color);
+  background: var(--md-code-bg-color);
+  font-size: 0.75rem;
+}
+
+.md-typeset .metrics strong {
+  display: block;
+  font-size: 1.6rem;
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset video {
+  width: 100%;
+  border-radius: 0.4rem;
+}
+
+/* Media swapped between web and PDF */
+.print-only {
+  display: none;
+}

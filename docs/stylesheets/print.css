@@ -1,0 +1,34 @@
+/* Print layout used by the PDF pipeline (scripts/build_pdfs.py, phase 2). */
+@page {
+  size: Letter;
+  margin: 0.6in 0.6in 0.7in;
+}
+
+@media print {
+  .web-only,
+  iframe,
+  video,
+  model-viewer,
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer,
+  .md-source-file,
+  .md-content__button {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .md-typeset h2,
+  .md-typeset figure,
+  .md-typeset .grid {
+    break-inside: avoid;
+  }
+
+  .md-typeset h2 {
+    break-after: avoid;
+  }
+}
