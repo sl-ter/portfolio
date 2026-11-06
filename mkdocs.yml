@@ -116,7 +116,6 @@ nav:
       - Activity Classification & Distance Tracker Wearable: projects/activity-wearable/index.md
       - NixOS Config: projects/nixos-config/index.md
       - Platform Design with EWB: projects/ewb/index.md
-      - Mechanism Design: projects/mechanism-design-1/index.md
       - Amphibious Human Powered Vehicle: projects/amphibious-hpv/index.md
   - Certificates: certificates.md
   - About: about.md
