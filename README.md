@@ -45,7 +45,9 @@ Visitors tick sections on `pdf-builder.md` and download one merged PDF.
 - `docs/javascripts/pdf-builder.js` builds the checklist from the manifest and merges the ticked PDFs
   in the browser with pdf-lib: cover, linked contents page, page numbers, bookmarks.
 - Front matter: `deep_dives: [x.md]` lets a project go in as Summary or Full; `pdf: false` leaves a
-  page out; `pdf: assets/resume.pdf` offers that file instead of printing the page.
+  page out; `pdf: assets/Sam_Linnington_Resume.pdf` offers that file instead of printing the page.
+- Resume: replace `docs/assets/Sam_Linnington_Resume.pdf`, then redraw the page's preview image:
+  `sips -s format png --resampleWidth 1347 docs/assets/Sam_Linnington_Resume.pdf --out docs/assets/resume.png`
 - Try it locally (the builder needs the generated PDFs, so `mkdocs serve` alone shows a notice):
 
   ```sh
