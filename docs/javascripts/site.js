@@ -1,6 +1,7 @@
 // Site-wide behaviour:
 //  1. Damped (smooth) page scrolling site-wide via Lenis. Sidebars, search results and code
-//     blocks keep native scrolling. Off when the visitor prefers reduced motion.
+//     blocks keep native scrolling. Off when the visitor prefers reduced motion, and on
+//     touch-first devices, where Lenis only smooths the wheel and touch already has momentum.
 //  2. Hero parallax fallback for browsers without CSS scroll-driven animations
 //     (extra.css handles the rest on the compositor).
 //  3. Smooth in-page jumps: table-of-contents links, footnotes, back-to-top.
@@ -12,7 +13,7 @@ const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").match
 const cssParallax = CSS.supports("animation-timeline: view()")
 
 const NATIVE_SCROLL = ".md-sidebar__scrollwrap, .md-search__scrollwrap, .md-typeset__scrollwrap, pre"
-const lenis = window.Lenis && !reducedMotion()
+const lenis = window.Lenis && !reducedMotion() && matchMedia("(pointer: fine)").matches
   ? new Lenis({
       autoRaf: true,
       lerp: 0.1,
