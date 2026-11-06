@@ -6,15 +6,15 @@ Two drawings are available; pick one with ART below, then run:
 
   network — a decentralised network (hubs with clusters, a backbone, cross-links) that fades
             out at its edges with stubs into the fade; nodes pop in and links grow, then site.js
-            loops random signal routes across its core (the accent), on a dot grid
+            loops random signal routes across it (the accent), on a dot grid
   pcb    — a board layout: MCU fanning traces out to flash, resistors, crystal, vias and a
            JTAG header (the TCK line is the accent), on a dot grid
   flange — a dimensioned flange drawing (bolt circle, centre lines, A–A cut), on a line grid
 
 Classes: `draw` strokes draw themselves in on load; everything else fades in after. The network
 times each element itself (`pop`, `grow` with --d delays) to stage its build-up, and tags links
-(data-a, data-b, indexes into the node list) and core nodes (data-core) so site.js can route
-signals over them; the svg's data-intro says when the build-up ends.
+(data-a, data-b, indexes into the node list; stubs carry only data-a) and the nodes routes may
+use (data-core) so site.js can route signals over them; the svg's data-intro says when the build-up ends.
 Colours come from CSS (docs/stylesheets/extra.css), so both drawings follow light/dark mode.
 """
 
@@ -111,7 +111,7 @@ def network(seed=7):
     # Hubs: dart-throwing with a generous spacing, so clusters have room and spacing varies
     for _ in range(4000):
         x, y = rng.uniform(bx0, bx1), rng.uniform(by0, by1)
-        if free(x, y, 250):
+        if free(x, y, 225):
             nodes.append((x, y, round(rng.uniform(11.5, 16.5), 1))); kind.append("hub"); parent.append(None)
     hubs = list(range(len(nodes)))
 
@@ -129,11 +129,11 @@ def network(seed=7):
         return made
 
     for h in hubs:
-        for sat in scatter(h, rng.randint(3, 7), 70, 185, 50, 3.5, 7.5, "leaf"):
+        for sat in scatter(h, rng.randint(3, 7), 62, 168, 46, 3.5, 7.5, "leaf"):
             if rng.random() < 0.3:                     # promote to a sub-hub with its own leaves
                 x, y, _ = nodes[sat]
                 nodes[sat] = (x, y, round(rng.uniform(8, 10.5), 1)); kind[sat] = "sub"
-                scatter(sat, rng.randint(1, 3), 50, 110, 42, 3, 5, "leaf")
+                scatter(sat, rng.randint(1, 3), 45, 100, 38, 3, 5, "leaf")
 
     n = len(nodes)
     dist = lambda a, b: ((nodes[a][0] - nodes[b][0]) ** 2 + (nodes[a][1] - nodes[b][1]) ** 2) ** 0.5
@@ -146,7 +146,7 @@ def network(seed=7):
     # Backbone: Gabriel graph among hubs
     for i, a in enumerate(hubs):
         for b in hubs[i + 1:]:
-            if dist(a, b) > 520:
+            if dist(a, b) > 470:
                 continue
             mx, my = (nodes[a][0] + nodes[b][0]) / 2, (nodes[a][1] + nodes[b][1]) / 2
             if all((nodes[c][0] - mx) ** 2 + (nodes[c][1] - my) ** 2 >= (dist(a, b) / 2) ** 2
@@ -160,10 +160,10 @@ def network(seed=7):
         if kind[i] == "hub":
             continue
         others = sorted((j for j in range(n) if j != i and j != parent[i]), key=lambda j: dist(i, j))
-        if rng.random() < 0.45 and dist(i, others[0]) < 170:
+        if rng.random() < 0.45 and dist(i, others[0]) < 155:
             link(i, others[0])
         near_hub = min((h for h in hubs if h != parent[i]), key=lambda h: dist(i, h))
-        if rng.random() < 0.25 and dist(i, near_hub) < 230:
+        if rng.random() < 0.25 and dist(i, near_hub) < 210:
             link(i, near_hub)
 
     # Stubs: outer nodes reach off into the fade, implying more network beyond
@@ -172,14 +172,15 @@ def network(seed=7):
         if rho(x, y) > 0.7:
             for _ in range(rng.choice((1, 1, 2))):
                 base = atan2((y - CY) / RY, (x - CX) / RX)
-                t, length = base + rng.uniform(-0.7, 0.7), rng.uniform(110, 280)
+                t, length = base + rng.uniform(-0.7, 0.7), rng.uniform(100, 250)
                 stubs.append((i, x + length * cos(t), y + length * sin(t)))
 
     # Build-up timeline: nodes pop in random order; links and stubs grow once their nodes exist
     order = list(range(n)); rng.shuffle(order)
     pop = {node: 0.15 + 1.2 * k / n for k, node in enumerate(order)}
     link_t, intro = 0.45, 0
-    core = lambda i: rho(nodes[i][0], nodes[i][1]) < 0.66 and nodes[i][1] < 640
+    # Routable nodes: everything still visible through the fade, so routes reach the outer edges
+    core = lambda i: rho(nodes[i][0], nodes[i][1]) < 0.9 and nodes[i][1] < 800
 
     d = [f'''<defs>
 <radialGradient id="pf-net-fade-grad" gradientUnits="userSpaceOnUse" cx="{CX}" cy="{CY}" r="{RX}"
@@ -197,16 +198,19 @@ def network(seed=7):
             "/>", f' data-a="{a}" data-b="{b}" style="--d: {start:.2f}s; --t: {link_t}s"/>'))
     for i, x, y in stubs:
         d.append(path([nodes[i][:2], (x, y)], "link stub grow").replace(
-            "/>", f' style="--d: {pop[i] + 0.15:.2f}s; --t: 0.6s"/>'))
+            "/>", f' data-a="{i}" style="--d: {pop[i] + 0.15:.2f}s; --t: 0.6s"/>'))
     d.append('</g>')
     d.append('<g class="net-nodes">')
     for i, (x, y, r) in enumerate(nodes):
         flag = ' data-core=""' if core(i) else ""
         d.append(f'<circle class="node {kind[i]} pop" cx="{x:.1f}" cy="{y:.1f}" r="{r}"{flag} '
                  f'style="--d: {pop[i]:.2f}s"/>')
-    d.append('</g></g>')
-    d.append('<g class="net-signal"></g>')  # site.js draws the looping routes here...
-    d.append('<g class="net-hops"></g>')    # ...and lights route nodes here, above everything
+    d.append('</g>')
+    # site.js draws the looping routes and lights their nodes here, inside the mask, so routes
+    # that reach the outer nodes (or run off along a stub) fade out with the network
+    d.append('<g class="net-signal"></g>')
+    d.append('<g class="net-hops"></g>')
+    d.append('</g>')
     return svg("pf-hero__drawing", d, attrs=f' data-intro="{intro:.2f}"')
 
 

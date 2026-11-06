@@ -69,22 +69,30 @@ function parallaxFallback(hero) {
 
 // Hero network: once the mesh has built itself, signals keep routing across it. A random path
 // lights up node by node and link by link, holds, then dies out one piece at a time from its
-// start, and the next route begins as the previous one starts to fade. Pauses while the hero is
-// off-screen or the tab is hidden.
+// start, and the next route begins as the previous one starts to fade. Routes reach out to the
+// edge nodes, and sometimes arrive or leave along a stub, as if passing through from the wider
+// network. Pauses while the hero is off-screen or the tab is hidden.
 const SVG_NS = "http://www.w3.org/2000/svg"
 const HOP_MS = 240      // between successive hops lighting up
 const HOLD_MS = 450     // fully lit before it starts dying out
 const FADE_MS = 140     // between successive pieces dying out
+const VIA_STUB = 0.5    // chance a route arrives (or leaves) along an edge node's stub
 
 function startSignals(hero, svg) {
-  // Routes stay on the core nodes (data-core): clear of the edge fade and the hero's bottom fade
+  // Routes use the nodes still visible through the edge fade (data-core)
   const nodes = [...svg.querySelectorAll(".node")].map(c => ({
     x: +c.getAttribute("cx"), y: +c.getAttribute("cy"), r: +c.getAttribute("r"),
     core: c.hasAttribute("data-core"),
   }))
   const adj = nodes.map(() => [])
+  const stubs = nodes.map(() => [])  // far ends of the stubs leaving each node
   for (const link of svg.querySelectorAll(".link[data-a]")) {
     const a = +link.dataset.a, b = +link.dataset.b
+    if (!link.dataset.b) {
+      const [, , x, y] = link.getAttribute("d").match(/[-\d.]+/g).map(Number)
+      stubs[a].push({ x, y })
+      continue
+    }
     if (!nodes[a].core || !nodes[b].core) continue
     adj[a].push(b)
     adj[b].push(a)
@@ -139,8 +147,7 @@ function startSignals(hero, svg) {
     pieces.push(dot)
   }
 
-  const lightLink = (i, j, pieces) => {
-    const a = nodes[i], b = nodes[j]
+  const lightLink = (a, b, pieces) => {
     const line = document.createElementNS(SVG_NS, "path")
     line.setAttribute("class", "signal")
     line.setAttribute("pathLength", "1")
@@ -151,18 +158,33 @@ function startSignals(hero, svg) {
     pieces.push(line)
   }
 
+  const stubOf = i => stubs[i].length && Math.random() < VIA_STUB
+    ? stubs[i][Math.floor(Math.random() * stubs[i].length)] : null
+
   let paused = false, idle = false
   const send = () => {
     if (paused) { idle = true; return }
     const route = pickRoute()
     if (!route) return
+    // Steps in lighting order: a node, or a link between two points
+    const steps = []
+    const enter = stubOf(route[0]), exit = stubOf(route[route.length - 1])
+    if (enter) steps.push({ from: enter, to: nodes[route[0]] })
+    route.forEach((v, k) => {
+      if (k) steps.push({ from: nodes[route[k - 1]], to: nodes[v] })
+      steps.push({ node: v })
+    })
+    if (exit) steps.push({ from: nodes[route[route.length - 1]], to: exit })
+
     const pieces = []
-    lightNode(route[0], pieces)
-    for (let k = 1; k < route.length; k++) {
-      later(() => lightLink(route[k - 1], route[k], pieces), HOP_MS * (k - 1) + 60)
-      later(() => lightNode(route[k], pieces), HOP_MS * k)
+    let t = 0
+    for (const step of steps) {
+      if (step.node === undefined) {
+        later(() => lightLink(step.from, step.to, pieces), t + 60)
+        t += HOP_MS
+      } else later(() => lightNode(step.node, pieces), t)
     }
-    const lit = HOP_MS * (route.length - 1) + HOLD_MS
+    const lit = t + HOLD_MS
     later(() => {
       pieces.forEach((el, k) => later(() => {
         el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 320, fill: "forwards" })
