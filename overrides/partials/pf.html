@@ -1,0 +1,29 @@
+{#- Macros shared by home.html and main.html -#}
+
+{% macro placeholder(label, size) %}
+  <div class="pf-placeholder pf-placeholder--{{ size }}" aria-hidden="true">
+    <span>{{ label }}</span>
+  </div>
+{% endmacro %}
+
+{% macro meta_line(p) %}{{ [p.meta.duration, p.meta.role] | select | join(" · ") }}{% endmacro %}
+
+{#- A project's card image: its hero, else the drafting-sheet placeholder -#}
+{% macro card_media(p) %}
+  <div class="pf-card__media">
+    {% if p.meta.hero %}
+      <img src="{{ (p.url ~ p.meta.hero) | url }}" alt="" loading="lazy">
+    {% else %}
+      {{ placeholder(p.title, "card") }}
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{#- Project pages (front matter has `duration`) under the Projects tab, in nav order -#}
+{% macro collect_projects(nav, out) %}
+  {%- for item in nav.items if item.title == "Projects" %}
+    {%- for child in item.children if child.is_page and child.meta and "duration" in child.meta %}
+      {%- set _ = out.append(child) %}
+    {%- endfor %}
+  {%- endfor %}
+{%- endmacro %}

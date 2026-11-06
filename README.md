@@ -19,7 +19,8 @@ python3 -m venv .venv
 4. Run `.venv/bin/mkdocs build --strict` before pushing.
 
 Front matter `skills` render as chips in the project header. Front matter and sections mirror the
-vault intake notes (`Portfolio - <Project>.md`).
+vault intake notes (one per project, named after it).
+
 ## Media
 
 `scripts/compress_media.sh <slug> <file>... [--mute]` shrinks photos (max 1800 px JPEG) and clips

@@ -13,6 +13,11 @@
     min-height: 0 !important;
   }
 
+  /* ...and the article's bottom margin alone can tip a full page onto a blank one */
+  .md-content__inner {
+    margin-bottom: 0;
+  }
+
   .web-only,
   iframe,
   video,
@@ -22,6 +27,7 @@
   .md-sidebar,
   .md-footer,
   .md-source-file,
+  .pf-next,
   .md-content__button,
   .md-progress,
   .md-top,
@@ -66,5 +72,11 @@
 
   .md-typeset .pf-still a::before {
     content: "▶ ";
+  }
+
+  /* Short enough to share a page with the certificate's write-up */
+  .md-typeset .pf-cert img {
+    max-height: 2.4in;
+    width: auto;
   }
 }

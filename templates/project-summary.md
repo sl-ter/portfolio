@@ -1,6 +1,6 @@
 ---
 # Copy to docs/projects/<slug>/index.md. Front matter and sections mirror the vault intake note
-# ("Portfolio - <Project>.md"). The page header (hero, title, tagline, duration, role,
+# (one per project, named after it). The page header (hero, title, tagline, duration, role,
 # skill chips) is rendered from this front matter by overrides/main.html; the body starts at TL;DR.
 title: Project Name
 duration: July - Sept 2026

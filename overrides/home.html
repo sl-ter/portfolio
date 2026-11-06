@@ -2,23 +2,13 @@
     affiliations come from `extra.affiliations` in mkdocs.yml. -#}
 {% extends "main.html" %}
 
-{% macro placeholder(label, size) %}
-  <div class="pf-placeholder pf-placeholder--{{ size }}" aria-hidden="true">
-    <span>{{ label }}</span>
-  </div>
-{% endmacro %}
-
-{% macro meta_line(p) %}{{ [p.meta.duration, p.meta.role] | select | join(" · ") }}{% endmacro %}
+{% import "partials/pf.html" as pf with context %}
 
 {% block tabs %}
   {{ super() }}
 
   {% set projects = [] %}
-  {% for item in nav.items if item.title == "Projects" %}
-    {% for child in item.children if child.is_page and child.meta and "duration" in child.meta %}
-      {% set _ = projects.append(child) %}
-    {% endfor %}
-  {% endfor %}
+  {{- pf.collect_projects(nav, projects) }}
 
   <style>
     /* Landing page: static header, full-bleed sections, no Markdown body or sidebars */
@@ -54,7 +44,7 @@
             {% if org.image %}
               <img src="{{ org.image | url }}" alt="{{ org.name }}" loading="lazy">
             {% else %}
-              {{ placeholder(org.name, "wide") }}
+              {{ pf.placeholder(org.name, "wide") }}
             {% endif %}
             {% if org.url %}</a>{% endif %}
           </div>
@@ -64,7 +54,7 @@
             </h3>
             {% if org.blurb %}<p>{{ org.blurb }}</p>{% endif %}
             {% if ns.p %}
-              <p class="pf-meta">{{ meta_line(ns.p) }}</p>
+              <p class="pf-meta">{{ pf.meta_line(ns.p) }}</p>
               <a class="pf-more" href="{{ ns.p.url | url }}">{{ ns.p.title }}</a>
             {% endif %}
           </div>
@@ -80,15 +70,9 @@
         {% for p in projects %}
           <li class="pf-card">
             <a href="{{ p.url | url }}">
-              <div class="pf-card__media">
-                {% if p.meta.hero %}
-                  <img src="{{ (p.url ~ p.meta.hero) | url }}" alt="" loading="lazy">
-                {% else %}
-                  {{ placeholder(p.title, "card") }}
-                {% endif %}
-              </div>
+              {{ pf.card_media(p) }}
               <h3>{{ p.title }}</h3>
-              <p class="pf-meta">{{ meta_line(p) }}</p>
+              <p class="pf-meta">{{ pf.meta_line(p) }}</p>
               {% if p.meta.tagline %}<p>{{ p.meta.tagline }}</p>{% endif %}
             </a>
           </li>

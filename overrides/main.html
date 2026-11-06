@@ -1,7 +1,6 @@
 {% extends "base.html" %}
+{% import "partials/pf.html" as pf with context %}
 
-{#- Headline fonts (Material loads the body ones), and the print stylesheet, which shouldn't
-    hold up rendering on screen -#}
 {#- Tab titles keep the name; the header shows site_name ("Personal Portfolio") -#}
 {% macro pf_title() -%}
   {%- if page.is_homepage %}{{ config.extra.author }} · {{ config.site_name }}
@@ -31,6 +30,30 @@
   {% endif %}
 {% endblock %}
 
+{#- Card at the end of each project page for the next one in nav order (the last wraps to the
+    first), to keep readers moving through the projects -#}
+{% macro next_project() %}
+  {% set projects = [] %}
+  {{- pf.collect_projects(nav, projects) }}
+  {% set ns = namespace(next=None) %}
+  {% for p in projects %}{% if p.url == page.url %}{% set ns.next = projects[loop.index0 + 1 if not loop.last else 0] %}{% endif %}{% endfor %}
+  {% if ns.next and ns.next.url != page.url %}
+    {% set n = ns.next %}
+    <nav class="pf-next" aria-label="Next project">
+      <a class="pf-next__card" href="{{ n.url | url }}">
+        {{ pf.card_media(n) }}
+        <div class="pf-next__body">
+          <p class="pf-next__label">Next project</p>
+          <p class="pf-next__title">{{ n.title }}</p>
+          {% if pf.meta_line(n) %}<p class="pf-meta">{{ pf.meta_line(n) }}</p>{% endif %}
+          {% if n.meta.tagline %}<p class="pf-next__tagline">{{ n.meta.tagline }}</p>{% endif %}
+        </div>
+      </a>
+      <a class="pf-more" href="{{ 'projects/' | url }}">All projects</a>
+    </nav>
+  {% endif %}
+{% endmacro %}
+
 {#- Project pages (front matter has `duration`) get a header built from front matter,
     so the Markdown body starts at the TL;DR. Everything else renders as normal. -#}
 {% block content %}
@@ -55,6 +78,7 @@
     </header>
     {{ page.content }}
     {% include "partials/source-file.html" %}
+    {{ next_project() }}
   {% else %}
     {{ super() }}
   {% endif %}

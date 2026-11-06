@@ -103,11 +103,11 @@ extra:
     - name: The Nemitz Robotics Group
       url: https://sites.tufts.edu/nemitz/activities/
       project: projects/fgf-3d-printing/index.md
-      blurb: ""
+      blurb: Specialized in the design and engineering of scalable robotic systems and automated robot manufacturing.
     - name: Z Polymers
       url: https://z-polymers.com/
       project: projects/tullomer-drone-applications/index.md
-      blurb: ""
+      blurb: Developing a high-performance material (Tullomer™) at relatively low cost across the health, aerospace and textile industries.
 
 # Project order = site order = PDF builder order.
 nav:

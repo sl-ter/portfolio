@@ -363,7 +363,8 @@ html.lenis body {
 }
 
 .pf-spotlight__media:hover img,
-.pf-card a:is(:hover, :focus) img {
+.pf-card a:is(:hover, :focus) img,
+.pf-next__card:is(:hover, :focus) img {
   transform: scale(1.03);
 }
 
@@ -541,6 +542,72 @@ html.lenis body {
 
 .md-typeset .pf-project ul.pf-chips {
   margin-bottom: 0;
+}
+
+/* Resume: the PDF's first page as an image, framed like a sheet of paper */
+.md-typeset .pf-resume {
+  display: block;
+  max-width: 44rem;
+  margin: 1.2rem 0;
+}
+
+.md-typeset .pf-resume img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  box-shadow: var(--md-shadow-z2);
+}
+
+/* Next-project card at the end of each project page */
+.pf-next {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset .pf-next__card {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 1.2rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  color: inherit;
+}
+
+.md-typeset .pf-next__body p {
+  margin: 0;
+}
+
+.md-typeset .pf-next__label {
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--md-typeset-a-color);
+}
+
+.md-typeset .pf-next__title {
+  font: 600 1.2rem/1.25 var(--pf-headline);
+  transition: color 200ms ease;
+}
+
+.md-typeset .pf-next__card:is(:hover, :focus) .pf-next__title {
+  color: var(--md-typeset-a-color);
+}
+
+.md-typeset .pf-next__body .pf-meta {
+  margin: 0.2rem 0 0.4rem;
+}
+
+.md-typeset .pf-next__tagline {
+  font-size: 0.75rem;
+}
+
+@media screen and (max-width: 30em) {
+  .md-typeset .pf-next__card {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* TL;DR: a lead callout on the accent rule instead of Material's stock blue */
