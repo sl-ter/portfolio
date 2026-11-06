@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{#- Tab titles keep the name; the header shows site_name ("Personal Portfolio") -#}
+{% block htmltitle %}
+  {% if page.is_homepage %}
+    <title>{{ config.extra.author }} · {{ config.site_name }}</title>
+  {% else %}
+    <title>{{ page.meta.title if page.meta and page.meta.title else page.title | striptags }} · {{ config.extra.author }}</title>
+  {% endif %}
+{% endblock %}
+
 {#- Project pages (front matter has `duration`) get a header built from front matter,
     so the Markdown body starts at the TL;DR. Everything else renders as normal. -#}
 {% block content %}

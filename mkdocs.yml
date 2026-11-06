@@ -1,4 +1,4 @@
-site_name: Sam Linnington
+site_name: Personal Portfolio
 site_description: Majoring in Mechanical Engineering and Minoring in AI applications at Tufts University, while earning the Certificate of International Business from The Fletcher School.
 site_url: https://sl-ter.github.io/portfolio/
 copyright: Copyright &copy; 2026 Sam Linnington
@@ -9,9 +9,9 @@ theme:
   font:
     text: IBM Plex Sans
     code: IBM Plex Mono
-  # Small flange mark: overrides/.icons/pf/flange.svg (favicon is the same mark in orange)
+  # Mitsudomoe mark: scripts/make_logo.py -> overrides/.icons/pf/ (favicon: same mark in orange)
   icon:
-    logo: pf/flange
+    logo: pf/mitsudomoe
   favicon: assets/favicon.svg
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -77,6 +77,8 @@ extra_javascript:
   - javascripts/site.js
 
 extra:
+  # Name used in browser-tab titles (site_name is the header label)
+  author: Sam Linnington
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/sl-ter

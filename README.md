@@ -29,7 +29,13 @@ Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div clas
 - `overrides/main.html`: renders the project header (hero, title, tagline, duration, role, skill chips)
   for any page whose front matter has `duration`.
 - `scripts/make_hero_art.py`: regenerates the hero linework (`overrides/partials/hero-*.html`).
-  Two drawings: `pcb` (default) and `flange`; switch with `ART` at the top of the script.
+  Drawings: `network` (default: decentralised mesh, staged build-up, one highlighted route),
+  `pcb` and `flange`; switch with `ART` at the top of the script.
+- `scripts/make_logo.py`: regenerates the header mark and favicon (`mitsudomoe` default, or
+  `flange`). Needs `shapely` in the venv (`.venv/bin/pip install shapely`); the site build doesn't.
+  The mark turns with the scroll (`site.js`).
+- Header: `site_name` ("Personal Portfolio") labels the bar; tab titles use `extra.author`.
+  The bar is graphite in dark mode and light grey in light mode (`extra.css`).
 - Hero parallax: CSS scroll-driven animations in `extra.css` (compositor-smooth, like Material's own
   landing page). `docs/javascripts/site.js` adds site-wide damped scrolling via Lenis (pinned on
   jsDelivr in `mkdocs.yml`; tune `lerp`), a parallax fallback for browsers without scroll-driven

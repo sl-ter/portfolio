@@ -43,6 +43,31 @@
   }
 }
 
+/* Header and tabs: graphite in dark mode, light grey in light mode. Material colours them from
+   the primary tokens, so re-point those tokens for just these two components. */
+[data-md-color-scheme="default"] :is(.md-header, .md-tabs) {
+  --md-primary-fg-color: #eceef1;
+  --md-primary-bg-color: var(--pf-graphite);
+  --md-primary-bg-color--light: rgba(28, 32, 37, 0.62);
+}
+
+[data-md-color-scheme="default"] .md-header {
+  border-bottom: 1px solid rgba(28, 32, 37, 0.08);
+}
+
+[data-md-color-scheme="default"] .md-search__form {
+  background-color: rgba(28, 32, 37, 0.07);
+}
+
+[data-md-color-scheme="default"] .md-search__form:hover {
+  background-color: rgba(28, 32, 37, 0.12);
+}
+
+/* Mitsudomoe logo turns as the page scrolls (site.js sets --pf-spin) */
+.md-header__button.md-logo svg {
+  transform: rotate(var(--pf-spin, 0deg));
+}
+
 /* Smooth (damped) page scrolling via Lenis, set up in site.js. Lenis's recommended CSS, except
    iframes only stop catching the wheel while a scroll is in motion, so embeds stay clickable. */
 html.lenis,
@@ -178,6 +203,45 @@ html.lenis body {
   font: 500 19px var(--pf-headline);
 }
 
+/* Network drawing */
+.pf-hero__drawing .link {
+  fill: none;
+  stroke: var(--pf-hero-thin);
+  stroke-width: 1.4;
+}
+
+.pf-hero__drawing .node {
+  fill: var(--pf-hero-bg);
+  stroke: var(--pf-hero-line);
+  stroke-width: 1.8;
+}
+
+.pf-hero__drawing .route {
+  fill: none;
+  stroke: var(--pf-orange);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+.pf-hero__drawing .hop {
+  fill: var(--pf-orange);
+}
+
+.pf-hero__drawing .hop-ring {
+  fill: none;
+  stroke: var(--pf-orange);
+  stroke-width: 1.6;
+}
+
+.pf-hero__drawing .tag {
+  fill: var(--pf-orange);
+  font: 600 20px var(--pf-headline);
+  paint-order: stroke;
+  stroke: var(--pf-hero-bg);         /* halo, so the label reads over links */
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+
 /* PCB drawing */
 .pf-hero__drawing .trace {
   stroke-width: 3.2;
@@ -287,6 +351,33 @@ html.lenis body {
 
 @keyframes pf-parallax {
   to { transform: translate3d(0, calc(var(--depth) * var(--pf-hero-h)), 0); }
+}
+
+/* Staged build-ups (the network): each element carries its own --d delay (and --t duration) */
+@media (prefers-reduced-motion: no-preference) {
+  .pf-hero__drawing .pop {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pf-pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s) both;
+  }
+
+  .pf-hero__drawing .grow {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: pf-draw var(--t, 0.45s) ease-out var(--d, 0s) forwards;
+  }
+
+  .pf-hero__drawing .late {
+    opacity: 0;
+    animation: pf-fade 0.5s ease var(--d, 0s) forwards;
+  }
+}
+
+@keyframes pf-pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
 }
 
 @keyframes pf-draw {

@@ -4,6 +4,7 @@
 //  2. Hero parallax fallback for browsers without CSS scroll-driven animations
 //     (extra.css handles the rest on the compositor).
 //  3. Smooth in-page jumps: table-of-contents links, footnotes, back-to-top.
+//  4. The header logo turns with the scroll.
 const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches
 const cssParallax = CSS.supports("animation-timeline: view()")
 
@@ -17,11 +18,23 @@ const lenis = window.Lenis && !reducedMotion()
     })
   : null
 
+// Logo: the mitsudomoe turns with the scroll position (clockwise, heads leading)
+const SPIN_DEG_PER_PX = 0.2
+const spinLogo = y => {
+  const logo = document.querySelector(".md-header__button.md-logo svg")
+  if (logo) logo.style.setProperty("--pf-spin", `${(y * SPIN_DEG_PER_PX).toFixed(1)}deg`)
+}
+if (!reducedMotion()) {
+  if (lenis) lenis.on("scroll", ({ scroll }) => spinLogo(scroll))
+  else window.addEventListener("scroll", () => spinLogo(window.scrollY), { passive: true })
+}
+
 let teardown = () => {}
 
 document$.subscribe(() => {
-  // navigation.instant swapped the page: let Lenis re-measure it
+  // navigation.instant swapped the page: let Lenis re-measure it, re-sync the logo
   if (lenis) lenis.resize()
+  if (!reducedMotion()) spinLogo(window.scrollY)
 
   teardown()
   teardown = () => {}
