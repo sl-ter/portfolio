@@ -18,6 +18,11 @@
     margin-bottom: 0;
   }
 
+  /* The page margin already spaces the top */
+  .md-main__inner {
+    margin-top: 0;
+  }
+
   .web-only,
   iframe,
   video,
@@ -75,8 +80,16 @@
   }
 
   /* Short enough to share a page with the certificate's write-up */
+  .md-typeset .pf-cert {
+    margin: 0.6em auto 0;
+  }
+
   .md-typeset .pf-cert img {
-    max-height: 2.4in;
+    max-height: 2in;
     width: auto;
+  }
+
+  .md-typeset .pf-cert figcaption {
+    margin: 0.4em auto 0;
   }
 }
