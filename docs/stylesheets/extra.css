@@ -43,6 +43,21 @@
   }
 }
 
+/* Smooth (damped) page scrolling via Lenis, set up in site.js. Lenis's recommended CSS, except
+   iframes only stop catching the wheel while a scroll is in motion, so embeds stay clickable. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 /* ---------- Type ---------- */
 .md-typeset h1,
 .md-typeset h2,
@@ -83,12 +98,15 @@
   --pf-hero-line: rgba(222, 228, 236, 0.62);
   --pf-hero-thin: rgba(222, 228, 236, 0.38);
 
+  --pf-hero-h: min(80vh, 44rem);
+
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
-  min-height: min(80vh, 44rem);
+  min-height: var(--pf-hero-h);
   background: var(--pf-hero-bg);
+  view-timeline: --pf-hero block;
   color: var(--pf-hero-fg);
 }
 
@@ -121,6 +139,10 @@
 
 .pf-hero__grid line.major {
   stroke: var(--pf-hero-grid-major);
+}
+
+.pf-hero__grid .dot {
+  fill: var(--pf-hero-grid-major);
 }
 
 .pf-hero__drawing .draw {
@@ -156,11 +178,38 @@
   font: 500 19px var(--pf-headline);
 }
 
+/* PCB drawing */
+.pf-hero__drawing .trace {
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pf-hero__drawing .pad {
+  fill: none;
+  stroke: var(--pf-hero-line);
+  stroke-width: 1.5;
+}
+
+.pf-hero__drawing :is(.ref, .net) {
+  fill: var(--pf-hero-line);
+  font: 500 17px var(--pf-headline);
+}
+
+.pf-hero__drawing .net {
+  fill: var(--pf-hero-thin);
+  font-size: 13px;
+}
+
+.pf-hero__drawing .ref.small {
+  font-size: 14px;
+}
+
 .pf-hero__drawing .accent {
   stroke: var(--pf-orange);
 }
 
-.pf-hero__drawing :is(.head, .label).accent {
+.pf-hero__drawing :is(.head, .label, .ref, .net).accent {
   fill: var(--pf-orange);
   stroke: none;
 }
@@ -217,10 +266,27 @@
     animation: pf-draw 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.15s forwards;
   }
 
-  .pf-hero__drawing :is(.center, .dim, .ext, .head, .label, .cut) {
+  .pf-hero__drawing :is(.center, .dim, .ext, .head, .label, .cut, .fade, .ref, .net) {
     opacity: 0;
     animation: pf-fade 0.7s ease 1.3s forwards;
   }
+}
+
+/* Parallax: layers drift at their --depth as the hero scrolls out of view. Scroll-driven CSS
+   animations run on the compositor, in step with native scrolling (no JS in the loop).
+   Browsers without support get the plain JS fallback in home.js. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .pf-hero [data-depth] {
+      animation: pf-parallax linear both;
+      animation-timeline: --pf-hero;
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+
+@keyframes pf-parallax {
+  to { transform: translate3d(0, calc(var(--depth) * var(--pf-hero-h)), 0); }
 }
 
 @keyframes pf-draw {

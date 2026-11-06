@@ -1,5 +1,5 @@
 site_name: Sam Linnington
-site_description: Mechanical engineering student building drones, 3D printers, wearables, and the infrastructure that runs them. Heading toward networks and hardware security.
+site_description: Majoring in Mechanical Engineering and Minoring in AI applications at Tufts University, while earning the Certificate of International Business from the Fletcher School.
 site_url: https://sl-ter.github.io/portfolio/
 copyright: Copyright &copy; 2026 Sam Linnington
 
@@ -10,7 +10,7 @@ theme:
     text: IBM Plex Sans
     code: IBM Plex Mono
   icon:
-    logo: material/ruler-square-compass
+    logo: material/vector-polyline
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -71,7 +71,8 @@ extra_css:
   - stylesheets/print.css
 
 extra_javascript:
-  - javascripts/home.js
+  - https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js
+  - javascripts/site.js
 
 extra:
   social:

@@ -34,11 +34,11 @@
   </style>
 
   <section class="pf-hero">
-    <div class="pf-hero__layer" data-depth="0.12">{% include "partials/hero-grid.html" %}</div>
-    <div class="pf-hero__layer" data-depth="0.32">{% include "partials/hero-drawing.html" %}</div>
+    <div class="pf-hero__layer" data-depth="0.12" style="--depth: 0.12">{% include "partials/hero-grid.html" %}</div>
+    <div class="pf-hero__layer" data-depth="0.3" style="--depth: 0.3">{% include "partials/hero-drawing.html" %}</div>
     <div class="pf-hero__blend"></div>
     <div class="md-grid pf-hero__inner">
-      <div class="pf-hero__content md-typeset" data-depth="-0.08">
+      <div class="pf-hero__content md-typeset" data-depth="-0.08" style="--depth: -0.08">
         <h1>Sam Linnington</h1>
         <p>{{ config.site_description }}</p>
         <a href="{{ 'projects/' | url }}" class="md-button md-button--primary">See the projects</a>

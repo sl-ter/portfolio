@@ -28,8 +28,11 @@ Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div clas
   front matter in nav order; the affiliation spotlights come from `extra.affiliations` in mkdocs.yml.
 - `overrides/main.html`: renders the project header (hero, title, tagline, duration, role, skill chips)
   for any page whose front matter has `duration`.
-- `scripts/make_hero_art.py`: regenerates the hero's drafting-sheet linework
-  (`overrides/partials/hero-*.html`).
-- `docs/javascripts/home.js`: damped hero parallax (off under `prefers-reduced-motion`).
+- `scripts/make_hero_art.py`: regenerates the hero linework (`overrides/partials/hero-*.html`).
+  Two drawings: `pcb` (default) and `flange`; switch with `ART` at the top of the script.
+- Hero parallax: CSS scroll-driven animations in `extra.css` (compositor-smooth, like Material's own
+  landing page). `docs/javascripts/site.js` adds site-wide damped scrolling via Lenis (pinned on
+  jsDelivr in `mkdocs.yml`; tune `lerp`), a parallax fallback for browsers without scroll-driven
+  animations, and smooth in-page jumps (TOC, footnotes, back-to-top).
 - Palette: graphite + international orange (`docs/stylesheets/extra.css` tokens). Type: IBM Plex Sans,
   headlines in IBM Plex Sans Condensed.
