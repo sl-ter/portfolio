@@ -1,4 +1,4 @@
-# Build a PDF
+# Portfolio as a PDF
 
 Choose the projects you want, and this page assembles them into one formatted PDF.
 

@@ -1,5 +1,5 @@
 ---
-title: ME193 Activity Wearable
+title: Activity Classification & Distance Tracker Wearable
 duration:
 role:
 skills: []

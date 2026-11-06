@@ -16,7 +16,11 @@
           {% if page.meta.role %}<div><dt>Role</dt><dd>{{ page.meta.role }}</dd></div>{% endif %}
         </dl>
       {% endif %}
-      {% include "partials/tags.html" %}
+      {% if page.meta.skills %}
+        <ul class="pf-chips">
+          {% for s in page.meta.skills %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      {% endif %}
     </header>
     {{ page.content }}
     {% include "partials/source-file.html" %}

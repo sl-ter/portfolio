@@ -34,6 +34,15 @@
   --md-typeset-a-color: #ff8a52;
 }
 
+/* ---------- Layout ---------- */
+/* No left nav on desktop: the tabs and the page title already say where you are, and the
+   footer links to the previous/next page. Below 76.25em it is the mobile menu, so it stays. */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary {
+    display: none;
+  }
+}
+
 /* ---------- Type ---------- */
 .md-typeset h1,
 .md-typeset h2,
@@ -63,14 +72,35 @@
 }
 
 /* ---------- Home: hero ---------- */
+/* Dark drafting sheet in dark mode; dark linework on white in light mode */
 .pf-hero {
+  --pf-hero-bg: var(--pf-graphite);
+  --pf-hero-fg: var(--pf-on-dark);
+  --pf-hero-fg-muted: rgba(238, 240, 243, 0.82);
+  --pf-hero-outline: rgba(238, 240, 243, 0.5);
+  --pf-hero-grid: rgba(255, 255, 255, 0.035);
+  --pf-hero-grid-major: rgba(255, 255, 255, 0.07);
+  --pf-hero-line: rgba(222, 228, 236, 0.62);
+  --pf-hero-thin: rgba(222, 228, 236, 0.38);
+
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   min-height: min(80vh, 44rem);
-  background: var(--pf-graphite);
-  color: var(--pf-on-dark);
+  background: var(--pf-hero-bg);
+  color: var(--pf-hero-fg);
+}
+
+[data-md-color-scheme="default"] .pf-hero {
+  --pf-hero-bg: var(--md-default-bg-color);
+  --pf-hero-fg: var(--pf-graphite);
+  --pf-hero-fg-muted: rgba(28, 32, 37, 0.78);
+  --pf-hero-outline: rgba(28, 32, 37, 0.45);
+  --pf-hero-grid: rgba(28, 32, 37, 0.045);
+  --pf-hero-grid-major: rgba(28, 32, 37, 0.09);
+  --pf-hero-line: rgba(28, 32, 37, 0.7);
+  --pf-hero-thin: rgba(28, 32, 37, 0.42);
 }
 
 .pf-hero__layer {
@@ -85,49 +115,44 @@
 }
 
 .pf-hero__grid line {
-  stroke: rgba(255, 255, 255, 0.035);
+  stroke: var(--pf-hero-grid);
   stroke-width: 1;
 }
 
 .pf-hero__grid line.major {
-  stroke: rgba(255, 255, 255, 0.07);
-}
-
-.pf-hero__drawing {
-  --line: rgba(222, 228, 236, 0.62);
-  --thin: rgba(222, 228, 236, 0.38);
+  stroke: var(--pf-hero-grid-major);
 }
 
 .pf-hero__drawing .draw {
   fill: none;
-  stroke: var(--line);
+  stroke: var(--pf-hero-line);
   stroke-width: 1.8;
 }
 
 .pf-hero__drawing .center {
   fill: none;
-  stroke: var(--thin);
+  stroke: var(--pf-hero-thin);
   stroke-width: 1;
   stroke-dasharray: 30 6 4 6;
 }
 
 .pf-hero__drawing :is(.dim, .ext) {
   fill: none;
-  stroke: var(--thin);
+  stroke: var(--pf-hero-thin);
   stroke-width: 1;
 }
 
 .pf-hero__drawing .cut {
-  stroke: var(--line);
+  stroke: var(--pf-hero-line);
   stroke-width: 3;
 }
 
 .pf-hero__drawing .head {
-  fill: var(--thin);
+  fill: var(--pf-hero-thin);
 }
 
 .pf-hero__drawing .label {
-  fill: var(--line);
+  fill: var(--pf-hero-line);
   font: 500 19px var(--pf-headline);
 }
 
@@ -163,7 +188,7 @@
   margin: 0 0 0.8rem;
   font-size: clamp(2.4rem, 7vw, 3.8rem);
   line-height: 1;
-  color: var(--pf-on-dark);
+  color: var(--pf-hero-fg);
 }
 
 .pf-hero .md-typeset p {
@@ -171,12 +196,12 @@
   margin: 0 0 1.6rem;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: rgba(238, 240, 243, 0.82);
+  color: var(--pf-hero-fg-muted);
 }
 
 .pf-hero .md-typeset .md-button:not(.md-button--primary) {
-  border-color: rgba(238, 240, 243, 0.5);
-  color: var(--pf-on-dark);
+  border-color: var(--pf-hero-outline);
+  color: var(--pf-hero-fg);
 }
 
 .pf-hero .md-typeset .md-button:not(.md-button--primary):is(:hover, :focus) {
@@ -209,6 +234,10 @@
 @media screen and (max-width: 45em) {
   .pf-hero__drawing {
     opacity: 0.22;
+  }
+
+  [data-md-color-scheme="default"] .pf-hero__drawing {
+    opacity: 0.3;
   }
 }
 
@@ -444,7 +473,7 @@
   font-weight: 600;
 }
 
-.md-typeset .pf-project .md-tags {
+.md-typeset .pf-project ul.pf-chips {
   margin-bottom: 0;
 }
 

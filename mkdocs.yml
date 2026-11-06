@@ -41,9 +41,6 @@ theme:
 # Built-in plugins only, so the config stays Zensical-compatible.
 plugins:
   - search
-  # Front matter `skills:` drives the chips and the Skills page (same key as the vault intake notes).
-  - tags:
-      tags_name_property: skills
 
 markdown_extensions:
   - attr_list
@@ -91,6 +88,15 @@ extra:
       link: mailto:samuel.linnington@tufts.edu
       name: Email
 
+  # Home-page spotlights, in order. `project` is the linked project's source path.
+  affiliations:
+    - name: Nemitz Robotics Group
+      project: projects/pellet-printer/index.md
+      blurb: ""
+    - name: Z Polymers
+      project: projects/tullomer-drone/index.md
+      blurb: ""
+
 # Project order = site order = PDF builder order.
 nav:
   - Home: index.md
@@ -98,15 +104,12 @@ nav:
       - projects/index.md
       - Tullomer Drone: projects/tullomer-drone/index.md
       - 3D Pellet Printer: projects/pellet-printer/index.md
-      - ME193 Activity Wearable: projects/me193-wearable/index.md
+      - Activity Classification & Distance Tracker Wearable: projects/activity-wearable/index.md
       - NixOS Config: projects/nixos-config/index.md
-      - MuJoCo on HPC: projects/mujoco-hpc/index.md
       - EWB Project: projects/ewb/index.md
       - Mechanism Design: projects/mechanism-design-1/index.md
       - Aquatic Human-Powered Vehicle: projects/aquatic-hpv/index.md
-  - Skills: skills.md
   - Certificates: certificates.md
-  - Directions: directions.md
   - About: about.md
   - Resume: resume.md
-  - Build a PDF: pdf-builder.md
+  - Portfolio as a PDF: pdf-builder.md

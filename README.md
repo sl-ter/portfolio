@@ -18,18 +18,18 @@ python3 -m venv .venv
 3. Add the page to `nav` in `mkdocs.yml`. Nav order is the site and PDF-builder order.
 4. Run `.venv/bin/mkdocs build --strict` before pushing.
 
-Front matter `skills` render as chips and feed the Skills page. Front matter and sections mirror the
+Front matter `skills` render as chips in the project header. Front matter and sections mirror the
 vault intake notes (`Portfolio - <Project>.md`).
 Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div class="web-only" markdown>`.
 
 ## Design
 
 - `overrides/home.html`: landing page. Its project spotlights and cards are built from each project's
-  front matter in nav order; the first two are featured.
+  front matter in nav order; the affiliation spotlights come from `extra.affiliations` in mkdocs.yml.
 - `overrides/main.html`: renders the project header (hero, title, tagline, duration, role, skill chips)
   for any page whose front matter has `duration`.
 - `scripts/make_hero_art.py`: regenerates the hero's drafting-sheet linework
   (`overrides/partials/hero-*.html`).
-- `docs/javascripts/home.js`: hero parallax (off under `prefers-reduced-motion`).
+- `docs/javascripts/home.js`: damped hero parallax (off under `prefers-reduced-motion`).
 - Palette: graphite + international orange (`docs/stylesheets/extra.css` tokens). Type: IBM Plex Sans,
   headlines in IBM Plex Sans Condensed.
