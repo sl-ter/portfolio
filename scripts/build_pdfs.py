@@ -12,6 +12,7 @@ Front matter it reads:
   deep_dives: [a.md, b.md]  a project's deep dives; the builder then offers Summary or Full
   pdf: false                leave the page out of the builder
   pdf: assets/resume.pdf    offer this file (relative to docs/) instead of printing the page
+Videos and <model-viewer> CAD print as their poster image, with a link back to the page.
 """
 
 import functools
@@ -91,9 +92,30 @@ RETARGET_LINKS = """site => {
 }"""
 
 
+# Videos and 3D models can't go on paper: swap each one that has a poster for that still, with
+# a note linking back to the page. Ones without a poster are hidden by print.css.
+POSTER_STILLS = """async () => {
+  const stills = []
+  for (const media of document.querySelectorAll("video[poster], model-viewer[poster]")) {
+    const kind = media.tagName === "VIDEO" ? "Video" : "Interactive 3D model"
+    const img = Object.assign(document.createElement("img"), {
+      src: new URL(media.getAttribute("poster"), location.href).href,
+      alt: media.getAttribute("alt") || kind,
+    })
+    const note = Object.assign(document.createElement("a"), { href: location.href, textContent: `${kind} on the web version` })
+    const still = Object.assign(document.createElement("span"), { className: "pf-still" })
+    still.append(img, note)
+    media.replaceWith(still)
+    stills.push(img.decode().catch(() => {}))
+  }
+  await Promise.all(stills)
+}"""
+
+
 def print_page(page, base, src, site_url):
     page.goto(base + page_url(src), wait_until="networkidle")
     page.evaluate("document.fonts.ready")
+    page.evaluate(POSTER_STILLS)
     page.evaluate(RETARGET_LINKS, site_url)
     return page.pdf(format="Letter", print_background=True, prefer_css_page_size=True)
 

@@ -27,10 +27,24 @@ Two or three sentences: the problem and why it was hard.
   <figcaption>Caption</figcaption>
 </figure>
 
-<!-- Web-only media (hidden in the PDF):
-<div class="web-only" markdown>
-<video controls preload="metadata" poster="img/clip-poster.jpg" src="img/clip.mp4"></video>
-</div>
+<!-- Video and CAD. Make files with scripts/compress_media.sh <slug> <file>..., which prints
+     these snippets. In the PDF each one prints as its poster with a link back to the page.
+     Keep these figures plain <figure> (no markdown attribute).
+
+<figure>
+<video src="img/clip.mp4" poster="img/clip.jpg" controls preload="none" playsinline></video>
+<figcaption>Caption</figcaption>
+</figure>
+
+Silent loop (compress with --mute):
+<video src="img/loop.mp4" poster="img/loop.jpg" autoplay loop muted playsinline></video>
+
+CAD: export GLB (Onshape: right-click the part studio, Export, GLTF/GLB) to cad/part.glb, plus an
+iso render to cad/part.png as the poster:
+<figure>
+<model-viewer src="cad/part.glb" poster="cad/part.png" alt="Part name" camera-controls disable-zoom></model-viewer>
+<figcaption>Drag to orbit</figcaption>
+</figure>
 -->
 
 ## Labor & Results

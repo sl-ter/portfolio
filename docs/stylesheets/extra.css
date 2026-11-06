@@ -673,6 +673,22 @@ html.lenis body {
   border-radius: var(--pf-radius);
 }
 
+/* CAD viewer: drag to orbit; the poster shows until the model loads */
+.md-typeset model-viewer {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--pf-radius);
+  background: var(--md-code-bg-color);
+  --poster-color: transparent;
+}
+
+/* Material figures shrink to their content, which a viewer has none of */
+.md-typeset figure:has(model-viewer) {
+  width: 100%;
+}
+
 /* Media swapped between web and PDF */
 .print-only {
   display: none;

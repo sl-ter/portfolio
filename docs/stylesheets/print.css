@@ -46,4 +46,25 @@
   .pf-external::after {
     content: none;
   }
+
+  /* A video or 3D model's poster, swapped in by build_pdfs.py */
+  .md-typeset .pf-still {
+    display: block;
+  }
+
+  .md-typeset .pf-still img {
+    display: block;
+    width: 100%;
+    border-radius: var(--pf-radius);
+  }
+
+  .md-typeset .pf-still a {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.6rem;
+  }
+
+  .md-typeset .pf-still a::before {
+    content: "▶ ";
+  }
 }

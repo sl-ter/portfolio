@@ -6,6 +6,8 @@
 //  3. Smooth in-page jumps: table-of-contents links, footnotes, back-to-top.
 //  4. The header logo turns with the scroll.
 //  5. Hero network: signal routes loop across the mesh after it builds itself.
+//  6. Project media: loads <model-viewer> only on pages that use it; looping clips stay still
+//     for visitors who prefer reduced motion.
 const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches
 const cssParallax = CSS.supports("animation-timeline: view()")
 
@@ -42,12 +44,41 @@ document$.subscribe(() => {
   teardowns.forEach(fn => fn())
   teardowns = []
 
+  if (document.querySelector("model-viewer")) loadModelViewer()
+  if (reducedMotion())
+    for (const clip of document.querySelectorAll("video[autoplay]")) {
+      clip.pause()
+      clip.controls = true
+    }
+
   const hero = document.querySelector(".pf-hero")
   if (!hero || reducedMotion()) return
   const network = hero.querySelector(".pf-hero__drawing[data-intro]")
   if (network) teardowns.push(startSignals(hero, network))
   if (!cssParallax) teardowns.push(parallaxFallback(hero))
 })
+
+// CAD viewer for <model-viewer src="cad/part.glb" poster="cad/part.png">; pinned like Lenis
+const MODEL_VIEWER = "https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"
+async function loadModelViewer() {
+  // Material's instant navigation assigns `src` on [src] elements, which leaves a stray undefined
+  // `src` property on a viewer that isn't defined yet. Once defined, the viewer adopts that over
+  // its attribute and never loads. Clear it before the first load...
+  if (!customElements.get("model-viewer")) {
+    for (const viewer of document.querySelectorAll("model-viewer")) delete viewer.src
+    if (!document.querySelector(`script[src="${MODEL_VIEWER}"]`))
+      document.head.append(Object.assign(document.createElement("script"), { type: "module", src: MODEL_VIEWER }))
+  }
+  await customElements.whenDefined("model-viewer")
+  await new Promise(requestAnimationFrame)
+  // ...and rebuild from its attributes any viewer that came in through instant navigation
+  for (const old of document.querySelectorAll("model-viewer")) {
+    if (old.src || !old.getAttribute("src")) continue
+    const viewer = document.createElement("model-viewer")
+    for (const { name, value } of old.attributes) viewer.setAttribute(name, value)
+    old.replaceWith(viewer)
+  }
+}
 
 function parallaxFallback(hero) {
   const layers = [...hero.querySelectorAll("[data-depth]")]

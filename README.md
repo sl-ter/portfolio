@@ -20,8 +20,19 @@ python3 -m venv .venv
 
 Front matter `skills` render as chips in the project header. Front matter and sections mirror the
 vault intake notes (`Portfolio - <Project>.md`).
-Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div class="web-only" markdown>`,
-and its still stand-in in `<div class="print-only" markdown>`.
+## Media
+
+`scripts/compress_media.sh <slug> <file>... [--mute]` shrinks photos (max 1800 px JPEG) and clips
+(720p H.264 + poster) into `docs/projects/<slug>/img/` and prints the Markdown to paste. Snippets for
+video, silent loops and CAD (`<model-viewer>`, GLB + iso-render poster) are in the template.
+
+- In the PDF, every `<video>` or `<model-viewer>` with a `poster` prints as that image with a
+  "on the web version" link (`build_pdfs.py`); ones without a poster are left out.
+- `site.js` loads model-viewer (pinned on jsDelivr) only on pages that use it, and keeps looping
+  clips still for visitors who prefer reduced motion. It also works around Material's instant
+  navigation leaving viewers without a `src` (see `loadModelViewer`).
+- For anything else that should differ between web and PDF: `<div class="web-only" markdown>` and
+  `<div class="print-only" markdown>`.
 
 ## Portfolio as a PDF
 
