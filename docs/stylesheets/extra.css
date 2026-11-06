@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=JetBrains+Mono:wght@700&display=swap");
-
 /* ---------- Tokens ---------- */
 :root {
   --pf-orange: #ff4f00;            /* international orange: fills, rules, the hero callout */
@@ -591,7 +589,12 @@ html.lenis body {
   display: none;
 }
 
-/* Portfolio as a PDF: the builder form (docs/javascripts/pdf-builder.js) */
+/* Portfolio as a PDF: the builder form (docs/javascripts/pdf-builder.js). Hold its space while
+   the manifest loads, so the footer doesn't jump down when the form appears. */
+#pf-pdf-builder:not(:has(form, p)) {
+  min-height: 42rem;
+}
+
 .pf-builder {
   margin-top: 1.6rem;
 }

@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{#- Headline fonts (Material loads the body ones), and the print stylesheet, which shouldn't
+    hold up rendering on screen -#}
+{% block extrahead %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=JetBrains+Mono:wght@700&display=swap">
+  <link rel="stylesheet" href="{{ 'stylesheets/print.css' | url }}" media="print">
+{% endblock %}
+
 {#- Tab titles keep the name; the header shows site_name ("Personal Portfolio") -#}
 {% block htmltitle %}
   {% if page.is_homepage %}

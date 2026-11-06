@@ -33,6 +33,10 @@ if (!reducedMotion()) {
   else window.addEventListener("scroll", () => spinLogo(window.scrollY), { passive: true })
 }
 
+// Material leaves its search dialog and page-load bar unnamed for screen readers
+document.querySelector(".md-search")?.setAttribute("aria-label", "Search")
+document.querySelector(".md-progress")?.setAttribute("aria-label", "Loading page")
+
 // Per-page setup; everything registered here is torn down when instant navigation swaps pages
 let teardowns = []
 
