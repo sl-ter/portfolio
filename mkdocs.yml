@@ -1,5 +1,5 @@
 site_name: Sam Linnington
-site_description: Majoring in Mechanical Engineering and Minoring in AI applications at Tufts University, while earning the Certificate of International Business from the Fletcher School.
+site_description: Majoring in Mechanical Engineering and Minoring in AI applications at Tufts University, while earning the Certificate of International Business from The Fletcher School.
 site_url: https://sl-ter.github.io/portfolio/
 copyright: Copyright &copy; 2026 Sam Linnington
 
@@ -9,8 +9,10 @@ theme:
   font:
     text: IBM Plex Sans
     code: IBM Plex Mono
+  # Small flange mark: overrides/.icons/pf/flange.svg (favicon is the same mark in orange)
   icon:
-    logo: material/vector-polyline
+    logo: pf/flange
+  favicon: assets/favicon.svg
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
