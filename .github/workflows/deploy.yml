@@ -32,10 +32,13 @@ jobs:
       - run: |
           v="${GITHUB_SHA::8}"
           find site -name '*.html' -exec sed -i -E \
-            "s#(stylesheets/(extra|print)\.css|javascripts/site\.js)\"#\1?v=$v\"#g" {} +
+            "s#(stylesheets/(extra|print)\.css|javascripts/(site|pdf-builder)\.js)\"#\1?v=$v\"#g" {} +
           grep -c "site.js?v=$v" site/index.html
-      # Phase 2: render per-project PDFs + manifest.json into site/pdf/
-      # - run: python scripts/build_pdfs.py
+      # Print every section the PDF builder offers, plus the cover, into site/pdf/
+      - run: |
+          pip install -r requirements-pdf.txt
+          playwright install --with-deps chromium
+          python scripts/build_pdfs.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

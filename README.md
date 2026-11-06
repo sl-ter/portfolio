@@ -20,7 +20,27 @@ python3 -m venv .venv
 
 Front matter `skills` render as chips in the project header. Front matter and sections mirror the
 vault intake notes (`Portfolio - <Project>.md`).
-Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div class="web-only" markdown>`.
+Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div class="web-only" markdown>`,
+and its still stand-in in `<div class="print-only" markdown>`.
+
+## Portfolio as a PDF
+
+Visitors tick sections on `pdf-builder.md` and download one merged PDF.
+
+- `scripts/build_pdfs.py` (runs in CI after `mkdocs build`) prints About, Resume, every project and
+  Certificates from `site/` with headless Chromium, renders a cover (the hero network with one route
+  lit), and writes them with `manifest.json` to `site/pdf/`. Print layout: `docs/stylesheets/print.css`.
+- `docs/javascripts/pdf-builder.js` builds the checklist from the manifest and merges the ticked PDFs
+  in the browser with pdf-lib: cover, linked contents page, page numbers, bookmarks.
+- Front matter: `deep_dives: [x.md]` lets a project go in as Summary or Full; `pdf: false` leaves a
+  page out; `pdf: assets/resume.pdf` offers that file instead of printing the page.
+- Try it locally (the builder needs the generated PDFs, so `mkdocs serve` alone shows a notice):
+
+  ```sh
+  .venv/bin/pip install -r requirements-pdf.txt && .venv/bin/playwright install chromium
+  .venv/bin/mkdocs build && .venv/bin/python scripts/build_pdfs.py
+  python3 -m http.server -d site 8001   # http://127.0.0.1:8001/pdf-builder/
+  ```
 
 ## Design
 

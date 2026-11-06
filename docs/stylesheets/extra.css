@@ -677,3 +677,159 @@ html.lenis body {
 .print-only {
   display: none;
 }
+
+/* Portfolio as a PDF: the builder form (docs/javascripts/pdf-builder.js) */
+.pf-builder {
+  margin-top: 1.6rem;
+}
+
+.pf-builder input {
+  accent-color: var(--pf-orange);
+}
+
+.md-typeset .pf-builder__group {
+  margin: 0 0 1.6rem;
+  padding: 0;
+  border: 0;
+}
+
+.md-typeset .pf-builder__group legend {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.4rem;
+  padding: 0;
+  color: var(--pf-orange);
+  font: 600 0.64rem var(--md-text-font-family);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pf-builder__bulk {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.pf-builder__bulk button {
+  color: var(--md-typeset-a-color);
+  font-size: 0.64rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.pf-builder__bulk button:hover {
+  text-decoration: underline;
+}
+
+.md-typeset .pf-builder ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset .pf-builder li.pf-builder__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 1rem;
+  margin: 0;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.pf-builder__pick {
+  display: flex;
+  flex: 1 1 18rem;
+  align-items: baseline;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.pf-builder__pick input {
+  flex: none;
+  align-self: center;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin: 0;
+}
+
+.pf-builder__title {
+  font-weight: 500;
+}
+
+.pf-builder__meta,
+.pf-builder__pages {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.pf-builder__pages {
+  min-width: 3.6rem;
+  text-align: right;
+}
+
+/* Summary | Full, as a two-way segmented switch */
+.pf-builder__variant {
+  display: inline-flex;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 2em;
+  overflow: hidden;
+  font-size: 0.64rem;
+}
+
+.pf-builder__variant label {
+  padding: 0.15em 0.8em;
+  cursor: pointer;
+}
+
+.pf-builder__variant input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pf-builder__variant label:has(input:checked) {
+  background: var(--md-default-fg-color);
+  color: var(--md-default-bg-color);
+}
+
+.pf-builder__variant label:has(input:focus-visible) {
+  outline: 2px solid var(--pf-orange);
+  outline-offset: -2px;
+}
+
+.pf-builder__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.6rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--md-default-fg-color);
+}
+
+.pf-builder__bar .pf-builder__pick {
+  flex: 1 1 auto;
+}
+
+.pf-builder__total {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+}
+
+.md-typeset .pf-builder__bar .md-button {
+  margin: 0;
+}
+
+.md-typeset .pf-builder__bar .md-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pf-builder__status {
+  min-height: 1.5em;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+}

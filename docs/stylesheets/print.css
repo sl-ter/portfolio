@@ -1,10 +1,18 @@
-/* Print layout used by the PDF pipeline (scripts/build_pdfs.py, phase 2). */
+/* Print layout used by the PDF pipeline (scripts/build_pdfs.py); also applies when a visitor prints
+   a page. Page numbers are stamped by the PDF builder, so the bottom margin leaves room for them. */
 @page {
   size: Letter;
-  margin: 0.6in 0.6in 0.7in;
+  margin: 0.6in 0.6in 0.75in;
 }
 
 @media print {
+  /* Material makes body at least a page tall; with the page margins that spills a blank page */
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
   .web-only,
   iframe,
   video,
@@ -14,7 +22,10 @@
   .md-sidebar,
   .md-footer,
   .md-source-file,
-  .md-content__button {
+  .md-content__button,
+  .md-progress,
+  .md-top,
+  .md-dialog {
     display: none !important;
   }
 
@@ -30,5 +41,9 @@
 
   .md-typeset h2 {
     break-after: avoid;
+  }
+
+  .pf-external::after {
+    content: none;
   }
 }
