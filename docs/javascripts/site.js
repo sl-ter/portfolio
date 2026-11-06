@@ -1,4 +1,4 @@
-// Scroll polish:
+// Site-wide behaviour:
 //  1. Damped (smooth) page scrolling site-wide via Lenis. Sidebars, search results and code
 //     blocks keep native scrolling. Off when the visitor prefers reduced motion.
 //  2. Hero parallax fallback for browsers without CSS scroll-driven animations
@@ -17,7 +17,7 @@ const lenis = window.Lenis && !reducedMotion()
       autoRaf: true,
       lerp: 0.1,
       stopInertiaOnNavigate: true,
-      prevent: node => Boolean(node.matches && node.matches(NATIVE_SCROLL)),
+      prevent: node => node.matches?.(NATIVE_SCROLL) ?? false,
     })
   : null
 
@@ -37,22 +37,23 @@ if (!reducedMotion()) {
 let teardowns = []
 
 document$.subscribe(() => {
+  const still = reducedMotion()
   // navigation.instant swapped the page: let Lenis re-measure it, re-sync the logo
-  if (lenis) lenis.resize()
-  if (!reducedMotion()) spinLogo(window.scrollY)
+  lenis?.resize()
+  if (!still) spinLogo(window.scrollY)
 
   teardowns.forEach(fn => fn())
   teardowns = []
 
   if (document.querySelector("model-viewer")) loadModelViewer()
-  if (reducedMotion())
+  if (still)
     for (const clip of document.querySelectorAll("video[autoplay]")) {
       clip.pause()
       clip.controls = true
     }
 
   const hero = document.querySelector(".pf-hero")
-  if (!hero || reducedMotion()) return
+  if (!hero || still) return
   const network = hero.querySelector(".pf-hero__drawing[data-intro]")
   if (network) teardowns.push(startSignals(hero, network))
   if (!cssParallax) teardowns.push(parallaxFallback(hero))
@@ -81,12 +82,11 @@ async function loadModelViewer() {
 }
 
 function parallaxFallback(hero) {
-  const layers = [...hero.querySelectorAll("[data-depth]")]
+  const layers = [...hero.querySelectorAll(".pf-depth")].map(el => [el, parseFloat(el.style.getPropertyValue("--depth"))])
   let queued = false
   const update = () => {
     const y = Math.min(window.scrollY, hero.offsetHeight)
-    for (const el of layers)
-      el.style.transform = `translate3d(0, ${(y * el.dataset.depth).toFixed(1)}px, 0)`
+    for (const [el, depth] of layers) el.style.transform = `translate3d(0, ${(y * depth).toFixed(1)}px, 0)`
     queued = false
   }
   const onScroll = () => {

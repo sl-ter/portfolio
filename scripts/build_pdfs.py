@@ -134,18 +134,19 @@ def cover_route(drawing, hops=5, seed=3):
             adj[a].append(b)
             adj[b].append(a)
     rng = random.Random(seed)
+    route = []
     for _ in range(50):
         src = rng.choice([i for i in adj if adj[i]])
-        prev, queue = {src: None}, deque([src])
+        prev, depth, queue = {src: None}, {src: 0}, deque([src])
         while queue:
             u = queue.popleft()
             for v in sorted(adj[u], key=lambda _: rng.random()):
                 if v not in prev:
-                    prev[v] = u
+                    prev[v], depth[v] = u, depth[u] + 1
                     queue.append(v)
-        far = [v for v in prev if _depth(prev, v) == hops]
+        far = [v for v in depth if depth[v] == hops]
         if far:
-            v, route = rng.choice(far), []
+            v = rng.choice(far)
             while v is not None:
                 route.append(v)
                 v = prev[v]
@@ -155,13 +156,6 @@ def cover_route(drawing, hops=5, seed=3):
     dots = "".join(f'<circle class="hop" cx="{xy[i][0]}" cy="{xy[i][1]}" r="{xy[i][2] + 1.5}"/>' for i in route)
     return (drawing.replace('<g class="net-signal"></g>', f'<g class="net-signal">{lines}</g>')
                    .replace('<g class="net-hops"></g>', f'<g class="net-hops">{dots}</g>'))
-
-
-def _depth(prev, v):
-    d = 0
-    while prev[v] is not None:
-        v, d = prev[v], d + 1
-    return d
 
 
 def cover_html(cfg, built):

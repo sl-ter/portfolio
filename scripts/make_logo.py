@@ -1,17 +1,13 @@
-"""Generate the header logo icon and favicon.
+"""Generate the header logo (a mitsudomoe: three tomoe swirling around the centre, no ring).
 
-Writes overrides/.icons/pf/<mark>.svg (filled shapes; Material colours it with currentColor)
-and docs/assets/favicon.svg (same mark in the accent orange).
-    .venv/bin/python scripts/make_logo.py
-
-  mitsudomoe — three tomoe swirling around the centre, no outer ring
-  flange     — outer ring, six bolt holes, bore
+Writes overrides/.icons/pf/mitsudomoe.svg (filled; Material colours it with currentColor) and
+docs/assets/favicon.svg (the same mark in the accent orange). Needs shapely (dev only):
+    .venv/bin/pip install shapely && .venv/bin/python scripts/make_logo.py
 """
 
 from math import atan2, cos, pi, radians, sin
 from pathlib import Path
 
-MARK = "mitsudomoe"
 ORANGE = "#ff4f00"
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,11 +18,6 @@ def polar(r, deg):
     return C + r * cos(radians(deg)), C + r * sin(radians(deg))
 
 
-def arc_points(cx, cy, r, a0, a1, n=24):
-    """Points along a circle from angle a0 to a1 (radians), inclusive."""
-    return [(cx + r * cos(a0 + (a1 - a0) * i / n), cy + r * sin(a0 + (a1 - a0) * i / n)) for i in range(n + 1)]
-
-
 def to_path(points):
     return "M" + "L".join(f"{x:.2f},{y:.2f}" for x, y in points) + "Z"
 
@@ -35,7 +26,7 @@ def mitsudomoe(R=11.4, g=1.4):
     """Three tomoe: round heads at mid-radius; each tail runs out along the rim and wraps the
     next head, separated from it by a gap of width g. Built as the outer disk minus the gaps
     (a thin band around one side of each head, plus the small triangle between the heads);
-    the three pieces left over are the tomoe. Needs shapely (dev only): pip install shapely."""
+    the three pieces left over are the tomoe."""
     from shapely.geometry import Point, Polygon
     from shapely.ops import unary_union
 
@@ -61,26 +52,12 @@ def mitsudomoe(R=11.4, g=1.4):
     gap = unary_union(gaps).difference(unary_union([Point(x, y).buffer(h, 128) for x, y in heads]))
     pieces = Point(C, C).buffer(R, 256).difference(gap)
     polys = sorted(getattr(pieces, "geoms", [pieces]), key=lambda poly: -poly.area)[:3]
-    return "".join(to_path(list(poly.exterior.coords)[:-1]) for poly in polys), "nonzero"
-
-
-def flange():
-    def circle(cx, cy, r):
-        return f"M{cx - r:.2f},{cy:.2f}a{r},{r} 0 1,0 {2 * r},0a{r},{r} 0 1,0 {-2 * r},0"
-
-    def ring(cx, cy, r_out, r_in):
-        return circle(cx, cy, r_out) + circle(cx, cy, r_in)
-
-    d = ring(C, C, 11, 9.3) + ring(C, C, 3.3, 1.9)
-    for i in range(6):
-        d += ring(*polar(6.3, -90 + 60 * i), 1.75, 0.9)
-    return d, "evenodd"
+    return "".join(to_path(list(poly.exterior.coords)[:-1]) for poly in polys)
 
 
 if __name__ == "__main__":
-    d, rule = {"mitsudomoe": mitsudomoe, "flange": flange}[MARK]()
-    icon = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="{rule}" d="{d}"/></svg>\n'
+    icon = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="nonzero" d="{mitsudomoe()}"/></svg>\n'
     (ROOT / "overrides/.icons/pf").mkdir(parents=True, exist_ok=True)
-    (ROOT / f"overrides/.icons/pf/{MARK}.svg").write_text(icon)
+    (ROOT / "overrides/.icons/pf/mitsudomoe.svg").write_text(icon)
     (ROOT / "docs/assets/favicon.svg").write_text(icon.replace("<path ", f'<path fill="{ORANGE}" ', 1))
-    print("wrote", MARK)
+    print("wrote overrides/.icons/pf/mitsudomoe.svg and docs/assets/favicon.svg")

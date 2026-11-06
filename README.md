@@ -59,13 +59,11 @@ Visitors tick sections on `pdf-builder.md` and download one merged PDF.
   front matter in nav order; the affiliation spotlights come from `extra.affiliations` in mkdocs.yml.
 - `overrides/main.html`: renders the project header (hero, title, tagline, duration, role, skill chips)
   for any page whose front matter has `duration`.
-- `scripts/make_hero_art.py`: regenerates the hero linework (`overrides/partials/hero-*.html`).
-  Drawings: `network` (default: decentralised hubs-and-clusters network that builds itself and
-  fades out at its edges; `site.js` then loops random orange signal routes across its core),
-  `pcb` and `flange`; switch with `ART` at the top of the script.
-- `scripts/make_logo.py`: regenerates the header mark and favicon (`mitsudomoe` default, or
-  `flange`). Needs `shapely` in the venv (`.venv/bin/pip install shapely`); the site build doesn't.
-  The mark turns with the scroll (`site.js`).
+- `scripts/make_hero_art.py`: regenerates the hero network (`overrides/partials/hero-*.html`), a
+  decentralised hubs-and-clusters network that builds itself and fades out at its edges; `site.js`
+  then loops orange signal routes across it. (Earlier PCB and flange drawings are in git history.)
+- `scripts/make_logo.py`: regenerates the mitsudomoe header mark and favicon. Needs `shapely` in the
+  venv (`.venv/bin/pip install shapely`); the site build doesn't. The mark turns with the scroll.
 - Header: `site_name` ("Personal Portfolio") labels the bar; tab titles use `extra.author`.
   The bar is graphite in dark mode and light grey in light mode (`extra.css`).
 - Hero parallax: CSS scroll-driven animations in `extra.css` (compositor-smooth, like Material's own
@@ -73,6 +71,6 @@ Visitors tick sections on `pdf-builder.md` and download one merged PDF.
   jsDelivr in `mkdocs.yml`; tune `lerp`), a parallax fallback for browsers without scroll-driven
   animations, and smooth in-page jumps (TOC, footnotes, back-to-top).
 - Palette: graphite + international orange (`docs/stylesheets/extra.css` tokens). Type: IBM Plex Sans,
-  headlines in IBM Plex Sans Condensed.
+  headlines in IBM Plex Sans Condensed, the name on the home page in JetBrains Mono.
 - Deploys stamp `?v=<commit>` onto our own CSS/JS URLs (see `deploy.yml`), so browsers never mix
   fresh pages with a cached older `site.js` or `extra.css`.

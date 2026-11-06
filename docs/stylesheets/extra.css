@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=JetBrains+Mono:wght@700&display=swap");
 
 /* ---------- Tokens ---------- */
 :root {
@@ -7,6 +7,7 @@
   --pf-graphite-2: #262b32;
   --pf-on-dark: #eef0f3;
   --pf-headline: "IBM Plex Sans Condensed", var(--md-text-font-family, sans-serif);
+  --pf-mono: "JetBrains Mono", var(--md-code-font-family, monospace);
   --pf-radius: 0.4rem;
 }
 
@@ -112,16 +113,14 @@ html.lenis body {
 }
 
 /* ---------- Home: hero ---------- */
-/* Dark drafting sheet in dark mode; dark linework on white in light mode */
+/* Light linework on graphite in dark mode; dark linework on white in light mode */
 .pf-hero {
   --pf-hero-bg: var(--pf-graphite);
   --pf-hero-fg: var(--pf-on-dark);
   --pf-hero-fg-muted: rgba(238, 240, 243, 0.82);
   --pf-hero-outline: rgba(238, 240, 243, 0.5);
-  --pf-hero-grid: rgba(255, 255, 255, 0.035);
-  --pf-hero-grid-major: rgba(255, 255, 255, 0.07);
-  --pf-hero-line: rgba(222, 228, 236, 0.62);
-  --pf-hero-thin: rgba(222, 228, 236, 0.38);
+  --pf-hero-dot: rgba(255, 255, 255, 0.07);
+  --pf-hero-link: rgba(222, 228, 236, 0.38);
   --pf-hero-node: #9ea3ab;            /* solid, so links don't show through the nodes */
 
   --pf-hero-h: min(80vh, 44rem);
@@ -141,10 +140,8 @@ html.lenis body {
   --pf-hero-fg: var(--pf-graphite);
   --pf-hero-fg-muted: rgba(28, 32, 37, 0.78);
   --pf-hero-outline: rgba(28, 32, 37, 0.45);
-  --pf-hero-grid: rgba(28, 32, 37, 0.045);
-  --pf-hero-grid-major: rgba(28, 32, 37, 0.09);
-  --pf-hero-line: rgba(28, 32, 37, 0.7);
-  --pf-hero-thin: rgba(28, 32, 37, 0.42);
+  --pf-hero-dot: rgba(28, 32, 37, 0.09);
+  --pf-hero-link: rgba(28, 32, 37, 0.42);
   --pf-hero-node: #5d636b;
 }
 
@@ -159,65 +156,19 @@ html.lenis body {
   height: 100%;
 }
 
-.pf-hero__grid line {
-  stroke: var(--pf-hero-grid);
-  stroke-width: 1;
-}
-
-.pf-hero__grid line.major {
-  stroke: var(--pf-hero-grid-major);
-}
-
 .pf-hero__grid .dot {
-  fill: var(--pf-hero-grid-major);
-}
-
-.pf-hero__drawing .draw {
-  fill: none;
-  stroke: var(--pf-hero-line);
-  stroke-width: 1.8;
-}
-
-.pf-hero__drawing .center {
-  fill: none;
-  stroke: var(--pf-hero-thin);
-  stroke-width: 1;
-  stroke-dasharray: 30 6 4 6;
-}
-
-.pf-hero__drawing :is(.dim, .ext) {
-  fill: none;
-  stroke: var(--pf-hero-thin);
-  stroke-width: 1;
-}
-
-.pf-hero__drawing .cut {
-  stroke: var(--pf-hero-line);
-  stroke-width: 3;
-}
-
-.pf-hero__drawing .head {
-  fill: var(--pf-hero-thin);
-}
-
-.pf-hero__drawing .label {
-  fill: var(--pf-hero-line);
-  font: 500 19px var(--pf-headline);
+  fill: var(--pf-hero-dot);
 }
 
 /* Network drawing: hubs, sub-hubs and leaves; site.js loops orange signal routes over it */
 .pf-hero__drawing .link {
   fill: none;
-  stroke: var(--pf-hero-thin);
+  stroke: var(--pf-hero-link);
   stroke-width: 1.1;
 }
 
 .pf-hero__drawing .link.major {
   stroke-width: 2;
-}
-
-.pf-hero__drawing .link.stub {
-  stroke-dasharray: none;
 }
 
 .pf-hero__drawing .node {
@@ -236,42 +187,6 @@ html.lenis body {
   fill: var(--pf-orange);
   transform-box: fill-box;
   transform-origin: center;
-}
-
-/* PCB drawing */
-.pf-hero__drawing .trace {
-  stroke-width: 3.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.pf-hero__drawing .pad {
-  fill: none;
-  stroke: var(--pf-hero-line);
-  stroke-width: 1.5;
-}
-
-.pf-hero__drawing :is(.ref, .net) {
-  fill: var(--pf-hero-line);
-  font: 500 17px var(--pf-headline);
-}
-
-.pf-hero__drawing .net {
-  fill: var(--pf-hero-thin);
-  font-size: 13px;
-}
-
-.pf-hero__drawing .ref.small {
-  font-size: 14px;
-}
-
-.pf-hero__drawing .accent {
-  stroke: var(--pf-orange);
-}
-
-.pf-hero__drawing :is(.head, .label, .ref, .net).accent {
-  fill: var(--pf-orange);
-  stroke: none;
 }
 
 /* Fade the hero into the page, like Material's landing page */
@@ -295,8 +210,8 @@ html.lenis body {
 
 .pf-hero .md-typeset h1 {
   margin: 0 0 0.8rem;
-  font-size: clamp(2.4rem, 7vw, 3.8rem);
-  line-height: 1;
+  font: 700 clamp(2rem, 6.4vw, 3.4rem) / 1.05 var(--pf-mono);
+  letter-spacing: -0.04em;
   color: var(--pf-hero-fg);
 }
 
@@ -318,26 +233,12 @@ html.lenis body {
   background: transparent;
 }
 
-/* The single orchestrated moment: the drawing draws itself in once */
-@media (prefers-reduced-motion: no-preference) {
-  .pf-hero__drawing .draw {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: pf-draw 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.15s forwards;
-  }
-
-  .pf-hero__drawing :is(.center, .dim, .ext, .head, .label, .cut, .fade, .ref, .net) {
-    opacity: 0;
-    animation: pf-fade 0.7s ease 1.3s forwards;
-  }
-}
-
 /* Parallax: layers drift at their --depth as the hero scrolls out of view. Scroll-driven CSS
    animations run on the compositor, in step with native scrolling (no JS in the loop).
-   Browsers without support get the plain JS fallback in home.js. */
+   Browsers without support get the JS fallback in site.js. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .pf-hero [data-depth] {
+    .pf-hero .pf-depth {
       animation: pf-parallax linear both;
       animation-timeline: --pf-hero;
       animation-range: exit 0% exit 100%;
@@ -349,7 +250,7 @@ html.lenis body {
   to { transform: translate3d(0, calc(var(--depth) * var(--pf-hero-h)), 0); }
 }
 
-/* Staged build-ups (the network): each element carries its own --d delay (and --t duration) */
+/* Network build-up: each element carries its own --d delay (and --t duration) */
 @media (prefers-reduced-motion: no-preference) {
   .pf-hero__drawing .pop {
     transform-box: fill-box;
@@ -373,10 +274,6 @@ html.lenis body {
 
 @keyframes pf-draw {
   to { stroke-dashoffset: 0; }
-}
-
-@keyframes pf-fade {
-  to { opacity: 1; }
 }
 
 @media screen and (max-width: 45em) {
