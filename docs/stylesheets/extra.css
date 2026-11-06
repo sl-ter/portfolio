@@ -74,6 +74,12 @@ html.lenis body {
   height: auto;
 }
 
+/* ...which undoes Material's full-height body, so short pages would end with the footer
+   mid-screen; restore it against the viewport instead */
+html.lenis body {
+  min-height: 100dvh;
+}
+
 .lenis.lenis-stopped {
   overflow: clip;
 }
