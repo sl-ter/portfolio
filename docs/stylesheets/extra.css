@@ -749,3 +749,24 @@ html.lenis body {
   color: var(--md-default-fg-color--light);
   font-size: 0.7rem;
 }
+
+/* 404 */
+.md-typeset .pf-404 {
+  padding: 2.4rem 0 4rem;
+}
+
+.md-typeset .pf-404__code {
+  margin: 0;
+  font: 700 clamp(4rem, 14vw, 7rem) / 1 var(--pf-mono);
+  letter-spacing: -0.04em;
+  color: var(--pf-orange);
+}
+
+.md-typeset .pf-404 h1 {
+  margin: 0.4rem 0 0.6rem;
+}
+
+.md-typeset .pf-404 p:not(.pf-404__code) {
+  margin: 0 0 1.6rem;
+  color: var(--md-default-fg-color--light);
+}

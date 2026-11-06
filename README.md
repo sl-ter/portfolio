@@ -72,5 +72,8 @@ Visitors tick sections on `pdf-builder.md` and download one merged PDF.
   animations, and smooth in-page jumps (TOC, footnotes, back-to-top).
 - Palette: graphite + international orange (`docs/stylesheets/extra.css` tokens). Type: IBM Plex Sans,
   headlines in IBM Plex Sans Condensed, the name on the home page in JetBrains Mono.
+- Link previews: `overrides/main.html` adds Open Graph tags (per-page title, the project tagline as
+  description) pointing at `docs/assets/social-card.png`; rerun `scripts/make_social_card.py` after
+  changing the hero art, logo or site description. `overrides/404.html` is the not-found page.
 - Deploys stamp `?v=<commit>` onto our own CSS/JS URLs (see `deploy.yml`), so browsers never mix
   fresh pages with a cached older `site.js` or `extra.css`.

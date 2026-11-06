@@ -1,0 +1,14 @@
+{#- Served by GitHub Pages for any missing URL under the site, e.g. an old project link -#}
+{% extends "main.html" %}
+
+{% block htmltitle %}<title>Not found · {{ config.extra.author }}</title>{% endblock %}
+
+{% block content %}
+  <div class="pf-404">
+    <p class="pf-404__code">404</p>
+    <h1>This page isn't here</h1>
+    <p>It may have moved, or the project it described is no longer in the portfolio.</p>
+    <a href="{{ config.site_url }}" class="md-button md-button--primary">Home</a>
+    <a href="{{ config.site_url }}projects/" class="md-button">Projects</a>
+  </div>
+{% endblock %}

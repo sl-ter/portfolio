@@ -2,17 +2,32 @@
 
 {#- Headline fonts (Material loads the body ones), and the print stylesheet, which shouldn't
     hold up rendering on screen -#}
+{#- Tab titles keep the name; the header shows site_name ("Personal Portfolio") -#}
+{% macro pf_title() -%}
+  {%- if page.is_homepage %}{{ config.extra.author }} · {{ config.site_name }}
+  {%- else %}{{ page.meta.title if page.meta and page.meta.title else page.title | striptags }} · {{ config.extra.author }}{% endif -%}
+{%- endmacro %}
+
+{% block htmltitle %}<title>{{ pf_title() }}</title>{% endblock %}
+
+{#- Headline fonts (Material loads the body ones), the print stylesheet (kept off the screen's
+    critical path), and the link preview that LinkedIn, Slack, iMessage etc. show when the site
+    is shared (image from scripts/make_social_card.py) -#}
 {% block extrahead %}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=JetBrains+Mono:wght@700&display=swap">
   <link rel="stylesheet" href="{{ 'stylesheets/print.css' | url }}" media="print">
-{% endblock %}
-
-{#- Tab titles keep the name; the header shows site_name ("Personal Portfolio") -#}
-{% block htmltitle %}
-  {% if page.is_homepage %}
-    <title>{{ config.extra.author }} · {{ config.site_name }}</title>
-  {% else %}
-    <title>{{ page.meta.title if page.meta and page.meta.title else page.title | striptags }} · {{ config.extra.author }}</title>
+  {% if page and page.canonical_url %}
+    {% set description = page.meta.tagline if page.meta and page.meta.tagline else config.site_description %}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ config.extra.author }}">
+    <meta property="og:title" content="{{ pf_title() }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:url" content="{{ page.canonical_url }}">
+    <meta property="og:image" content="{{ config.site_url }}assets/social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ config.extra.author }}, Engineering Portfolio">
+    <meta name="twitter:card" content="summary_large_image">
   {% endif %}
 {% endblock %}
 
