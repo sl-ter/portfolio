@@ -20,10 +20,11 @@ const lenis = window.Lenis && !reducedMotion()
   : null
 
 // Logo: the mitsudomoe turns with the scroll position (clockwise, heads leading)
-const SPIN_DEG_PER_PX = 0.2
+const SPIN_TURNS_PER_SCREEN = 10
 const spinLogo = y => {
   const logo = document.querySelector(".md-header__button.md-logo svg")
-  if (logo) logo.style.setProperty("--pf-spin", `${(y * SPIN_DEG_PER_PX).toFixed(1)}deg`)
+  const deg = (y / window.innerHeight) * SPIN_TURNS_PER_SCREEN * 360
+  if (logo) logo.style.setProperty("--pf-spin", `${deg.toFixed(1)}deg`)
 }
 if (!reducedMotion()) {
   if (lenis) lenis.on("scroll", ({ scroll }) => spinLogo(scroll))
@@ -74,15 +75,17 @@ const SVG_NS = "http://www.w3.org/2000/svg"
 const HOP_MS = 240      // between successive hops lighting up
 const HOLD_MS = 450     // fully lit before it starts dying out
 const FADE_MS = 140     // between successive pieces dying out
-const VISIBLE_Y = 620   // keep routes above the hero's bottom fade (viewBox units)
 
 function startSignals(hero, svg) {
+  // Routes stay on the core nodes (data-core): clear of the edge fade and the hero's bottom fade
   const nodes = [...svg.querySelectorAll(".node")].map(c => ({
     x: +c.getAttribute("cx"), y: +c.getAttribute("cy"), r: +c.getAttribute("r"),
+    core: c.hasAttribute("data-core"),
   }))
   const adj = nodes.map(() => [])
-  for (const link of svg.querySelectorAll(".link")) {
+  for (const link of svg.querySelectorAll(".link[data-a]")) {
     const a = +link.dataset.a, b = +link.dataset.b
+    if (!nodes[a].core || !nodes[b].core) continue
     adj[a].push(b)
     adj[b].push(a)
   }
@@ -98,7 +101,7 @@ function startSignals(hero, svg) {
   // Random route: breadth-first search from a random source with neighbours shuffled, so the
   // path is a shortest one but a different one each time; target 4–7 hops away
   const pickRoute = () => {
-    const visible = nodes.flatMap((n, i) => (n.y < VISIBLE_Y ? [i] : []))
+    const visible = nodes.flatMap((n, i) => (n.core && adj[i].length ? [i] : []))
     for (let tries = 0; tries < 20; tries++) {
       const src = visible[Math.floor(Math.random() * visible.length)]
       const prev = new Map([[src, -1]])
@@ -113,7 +116,7 @@ function startSignals(hero, svg) {
           queue.push(v)
         }
       }
-      const targets = [...depth].filter(([i, d]) => d >= 4 && d <= 7 && nodes[i].y < VISIBLE_Y)
+      const targets = [...depth].filter(([, d]) => d >= 4 && d <= 7)
       if (!targets.length) continue
       let v = targets[Math.floor(Math.random() * targets.length)][0]
       const route = [v]

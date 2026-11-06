@@ -29,8 +29,8 @@ Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div clas
 - `overrides/main.html`: renders the project header (hero, title, tagline, duration, role, skill chips)
   for any page whose front matter has `duration`.
 - `scripts/make_hero_art.py`: regenerates the hero linework (`overrides/partials/hero-*.html`).
-  Drawings: `network` (default: decentralised mesh that builds itself; `site.js` then loops
-  random orange signal routes across it),
+  Drawings: `network` (default: decentralised hubs-and-clusters network that builds itself and
+  fades out at its edges; `site.js` then loops random orange signal routes across its core),
   `pcb` and `flange`; switch with `ART` at the top of the script.
 - `scripts/make_logo.py`: regenerates the header mark and favicon (`mitsudomoe` default, or
   `flange`). Needs `shapely` in the venv (`.venv/bin/pip install shapely`); the site build doesn't.
@@ -43,3 +43,5 @@ Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div clas
   animations, and smooth in-page jumps (TOC, footnotes, back-to-top).
 - Palette: graphite + international orange (`docs/stylesheets/extra.css` tokens). Type: IBM Plex Sans,
   headlines in IBM Plex Sans Condensed.
+- Deploys stamp `?v=<commit>` onto our own CSS/JS URLs (see `deploy.yml`), so browsers never mix
+  fresh pages with a cached older `site.js` or `extra.css`.

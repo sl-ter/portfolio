@@ -1,5 +1,5 @@
 ---
-title: EWB Project
+title: Platform Design with EWB
 duration:
 role:
 skills: []

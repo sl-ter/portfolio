@@ -205,11 +205,19 @@ html.lenis body {
   font: 500 19px var(--pf-headline);
 }
 
-/* Network drawing: filled nodes; site.js loops orange signal routes over it */
+/* Network drawing: hubs, sub-hubs and leaves; site.js loops orange signal routes over it */
 .pf-hero__drawing .link {
   fill: none;
   stroke: var(--pf-hero-thin);
-  stroke-width: 1.3;
+  stroke-width: 1.1;
+}
+
+.pf-hero__drawing .link.major {
+  stroke-width: 2;
+}
+
+.pf-hero__drawing .link.stub {
+  stroke-dasharray: none;
 }
 
 .pf-hero__drawing .node {

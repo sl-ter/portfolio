@@ -4,21 +4,21 @@ Writes overrides/partials/hero-grid.html and overrides/partials/hero-drawing.htm
 Two drawings are available; pick one with ART below, then run:
     .venv/bin/python scripts/make_hero_art.py
 
-  network — a decentralised mesh of filled nodes: nodes pop in and links grow between them as
-            both ends appear; then site.js loops random signal routes across it (the accent),
-            on a dot grid
+  network — a decentralised network (hubs with clusters, a backbone, cross-links) that fades
+            out at its edges with stubs into the fade; nodes pop in and links grow, then site.js
+            loops random signal routes across its core (the accent), on a dot grid
   pcb    — a board layout: MCU fanning traces out to flash, resistors, crystal, vias and a
            JTAG header (the TCK line is the accent), on a dot grid
   flange — a dimensioned flange drawing (bolt circle, centre lines, A–A cut), on a line grid
 
 Classes: `draw` strokes draw themselves in on load; everything else fades in after. The network
-times each element itself (`pop`, `grow` with --d delays) to stage its build-up, and tags nodes
-(data-i, data-r) and links (data-a, data-b) so site.js can route signals over them; the svg's
-data-intro says when the build-up ends.
+times each element itself (`pop`, `grow` with --d delays) to stage its build-up, and tags links
+(data-a, data-b, indexes into the node list) and core nodes (data-core) so site.js can route
+signals over them; the svg's data-intro says when the build-up ends.
 Colours come from CSS (docs/stylesheets/extra.css), so both drawings follow light/dark mode.
 """
 
-from math import cos, pi, radians, sin
+from math import atan2, cos, pi, radians, sin
 from pathlib import Path
 
 ART = "network"
@@ -90,80 +90,123 @@ def dot_grid():
 
 # ---------------------------------------------------------------- network
 
-def network(seed=11):
+def network(seed=7):
+    """Decentralised network: a dozen hubs, each with its own cluster of satellites (some of them
+    sub-hubs with leaves), a heavier hub-to-hub backbone, and lighter cross-links between
+    clusters. It runs past the visible area and fades out under an elliptical mask, with stub
+    links reaching off into the fade, so it reads as part of a larger network."""
     import random
 
     rng = random.Random(seed)
-    x0, y0, x1, y1, spacing = 760, 90, 1570, 840, 96
+    CX, CY, RX, RY = 1250, 450, 570, 430           # visible core: the mask's ellipse
+    bx0, by0, bx1, by1 = 700, -40, 1800, 940       # where nodes may go (beyond the viewBox)
+    rho = lambda x, y: (((x - CX) / RX) ** 2 + ((y - CY) / RY) ** 2) ** 0.5
 
-    # Poisson-disk sampling (Bridson): evenly spread but irregular, no node closer than `spacing`
-    cell = spacing / 2 ** 0.5
-    grid, pts, active = {}, [], []
+    nodes, kind, parent = [], [], []               # (x, y, r); "hub" | "sub" | "leaf"
 
-    def fits(x, y):
-        gx, gy = int(x // cell), int(y // cell)
-        for i in range(gx - 2, gx + 3):
-            for j in range(gy - 2, gy + 3):
-                q = grid.get((i, j))
-                if q is not None and (q[0] - x) ** 2 + (q[1] - y) ** 2 < spacing ** 2:
-                    return False
-        return True
+    def free(x, y, gap):
+        return bx0 <= x <= bx1 and by0 <= y <= by1 and rho(x, y) < 1.12 and \
+            all((x - a) ** 2 + (y - b) ** 2 >= gap ** 2 for a, b, _ in nodes)
 
-    def add(x, y):
-        pts.append((x, y)); active.append((x, y)); grid[(int(x // cell), int(y // cell))] = (x, y)
+    # Hubs: dart-throwing with a generous spacing, so clusters have room and spacing varies
+    for _ in range(4000):
+        x, y = rng.uniform(bx0, bx1), rng.uniform(by0, by1)
+        if free(x, y, 250):
+            nodes.append((x, y, round(rng.uniform(11.5, 16.5), 1))); kind.append("hub"); parent.append(None)
+    hubs = list(range(len(nodes)))
 
-    add((x0 + x1) / 2, (y0 + y1) / 2)
-    while active:
-        ax, ay = active[rng.randrange(len(active))]
-        for _ in range(30):
-            t, r = rng.uniform(0, 2 * pi), rng.uniform(spacing, 1.8 * spacing)
-            x, y = ax + r * cos(t), ay + r * sin(t)
-            if x0 <= x <= x1 and y0 <= y <= y1 and fits(x, y):
-                add(x, y)
-                break
-        else:
-            active.remove((ax, ay))
+    def scatter(around, count, dmin, dmax, gap, rmin, rmax, k):
+        made = []
+        ax, ay, _ = nodes[around]
+        for _ in range(count):
+            for _ in range(60):
+                t, d = rng.uniform(0, 2 * pi), rng.uniform(dmin, dmax)
+                x, y = ax + d * cos(t), ay + d * sin(t)
+                if free(x, y, gap):
+                    nodes.append((x, y, round(rng.uniform(rmin, rmax), 1))); kind.append(k); parent.append(around)
+                    made.append(len(nodes) - 1)
+                    break
+        return made
 
-    n = len(pts)
-    dist = lambda a, b: ((pts[a][0] - pts[b][0]) ** 2 + (pts[a][1] - pts[b][1]) ** 2) ** 0.5
+    for h in hubs:
+        for sat in scatter(h, rng.randint(3, 7), 70, 185, 50, 3.5, 7.5, "leaf"):
+            if rng.random() < 0.3:                     # promote to a sub-hub with its own leaves
+                x, y, _ = nodes[sat]
+                nodes[sat] = (x, y, round(rng.uniform(8, 10.5), 1)); kind[sat] = "sub"
+                scatter(sat, rng.randint(1, 3), 50, 110, 42, 3, 5, "leaf")
 
-    # Links: a Gabriel graph (near neighbours, no hubs) for the mesh, plus some second-ring links
-    # that reach past a neighbour and cross others, for the redundant, robust look of a
-    # decentralised network
-    edges = set()
-    for a in range(n):
-        for b in range(a + 1, n):
-            if dist(a, b) > 2.0 * spacing:
+    n = len(nodes)
+    dist = lambda a, b: ((nodes[a][0] - nodes[b][0]) ** 2 + (nodes[a][1] - nodes[b][1]) ** 2) ** 0.5
+    links = {}                                         # (a, b) -> "major" | ""
+
+    def link(a, b, weight=""):
+        if a != b:
+            links.setdefault((min(a, b), max(a, b)), weight)
+
+    # Backbone: Gabriel graph among hubs
+    for i, a in enumerate(hubs):
+        for b in hubs[i + 1:]:
+            if dist(a, b) > 520:
                 continue
-            mx, my = (pts[a][0] + pts[b][0]) / 2, (pts[a][1] + pts[b][1]) / 2
-            r2 = (dist(a, b) / 2) ** 2
-            gabriel = all((pts[c][0] - mx) ** 2 + (pts[c][1] - my) ** 2 >= r2
-                          for c in range(n) if c not in (a, b))
-            if gabriel or rng.random() < 0.18:
-                edges.add((a, b))
-    edges = sorted(edges)
+            mx, my = (nodes[a][0] + nodes[b][0]) / 2, (nodes[a][1] + nodes[b][1]) / 2
+            if all((nodes[c][0] - mx) ** 2 + (nodes[c][1] - my) ** 2 >= (dist(a, b) / 2) ** 2
+                   for c in hubs if c not in (a, b)):
+                link(a, b, "major")
+    # Spokes, then cross-links: each non-hub sometimes also reaches its nearest outside node
+    for i in range(n):
+        if parent[i] is not None:
+            link(i, parent[i])
+    for i in range(n):
+        if kind[i] == "hub":
+            continue
+        others = sorted((j for j in range(n) if j != i and j != parent[i]), key=lambda j: dist(i, j))
+        if rng.random() < 0.45 and dist(i, others[0]) < 170:
+            link(i, others[0])
+        near_hub = min((h for h in hubs if h != parent[i]), key=lambda h: dist(i, h))
+        if rng.random() < 0.25 and dist(i, near_hub) < 230:
+            link(i, near_hub)
 
-    # Build-up: nodes pop in random order; each link grows from the newer node to the older
-    # one as soon as both exist
+    # Stubs: outer nodes reach off into the fade, implying more network beyond
+    stubs = []
+    for i, (x, y, _) in enumerate(nodes):
+        if rho(x, y) > 0.7:
+            for _ in range(rng.choice((1, 1, 2))):
+                base = atan2((y - CY) / RY, (x - CX) / RX)
+                t, length = base + rng.uniform(-0.7, 0.7), rng.uniform(110, 280)
+                stubs.append((i, x + length * cos(t), y + length * sin(t)))
+
+    # Build-up timeline: nodes pop in random order; links and stubs grow once their nodes exist
     order = list(range(n)); rng.shuffle(order)
-    pop = {node: 0.15 + 1.1 * k / n for k, node in enumerate(order)}
-    radius = {i: round(rng.uniform(5.5, 8.5), 1) for i in range(n)}
+    pop = {node: 0.15 + 1.2 * k / n for k, node in enumerate(order)}
     link_t, intro = 0.45, 0
-    d = ['<g class="net-links">']
-    for a, b in edges:
+    core = lambda i: rho(nodes[i][0], nodes[i][1]) < 0.66 and nodes[i][1] < 640
+
+    d = [f'''<defs>
+<radialGradient id="pf-net-fade-grad" gradientUnits="userSpaceOnUse" cx="{CX}" cy="{CY}" r="{RX}"
+  gradientTransform="translate({CX} {CY}) scale(1 {RY / RX:.3f}) translate({-CX} {-CY})">
+<stop offset="0.5" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+<mask id="pf-net-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="{W}" height="{H}">
+<rect width="{W}" height="{H}" fill="url(#pf-net-fade-grad)"/></mask>
+</defs>''', '<g mask="url(#pf-net-fade)">', '<g class="net-links">']
+    for (a, b), weight in sorted(links.items()):
         new, old = (a, b) if pop[a] >= pop[b] else (b, a)
         start = pop[new] + 0.12
         intro = max(intro, start + link_t)
-        d.append(path([pts[new], pts[old]], "link grow").replace(
+        cls = "link major grow" if weight else "link grow"
+        d.append(path([nodes[new][:2], nodes[old][:2]], cls).replace(
             "/>", f' data-a="{a}" data-b="{b}" style="--d: {start:.2f}s; --t: {link_t}s"/>'))
+    for i, x, y in stubs:
+        d.append(path([nodes[i][:2], (x, y)], "link stub grow").replace(
+            "/>", f' style="--d: {pop[i] + 0.15:.2f}s; --t: 0.6s"/>'))
     d.append('</g>')
-    d.append('<g class="net-signal"></g>')  # site.js draws the looping routes here
     d.append('<g class="net-nodes">')
-    for i, (x, y) in enumerate(pts):
-        d.append(f'<circle class="node pop" cx="{x:.1f}" cy="{y:.1f}" r="{radius[i]}" '
-                 f'data-i="{i}" style="--d: {pop[i]:.2f}s"/>')
-    d.append('</g>')
-    d.append('<g class="net-hops"></g>')     # route nodes light up here, above the plain nodes
+    for i, (x, y, r) in enumerate(nodes):
+        flag = ' data-core=""' if core(i) else ""
+        d.append(f'<circle class="node {kind[i]} pop" cx="{x:.1f}" cy="{y:.1f}" r="{r}"{flag} '
+                 f'style="--d: {pop[i]:.2f}s"/>')
+    d.append('</g></g>')
+    d.append('<g class="net-signal"></g>')  # site.js draws the looping routes here...
+    d.append('<g class="net-hops"></g>')    # ...and lights route nodes here, above everything
     return svg("pf-hero__drawing", d, attrs=f' data-intro="{intro:.2f}"')
 
 

@@ -1,5 +1,5 @@
 ---
-title: Aquatic Human-Powered Vehicle
+title: Amphibious Human Powered Vehicle
 duration:
 role:
 skills: []

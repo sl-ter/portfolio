@@ -27,6 +27,13 @@ jobs:
       - run: mkdocs build --strict
         env:
           NO_MKDOCS_2_WARNING: "1"
+      # Version our own CSS/JS URLs per deploy, so a browser never pairs fresh pages with a
+      # cached older stylesheet or script (Material's own assets are already hashed)
+      - run: |
+          v="${GITHUB_SHA::8}"
+          find site -name '*.html' -exec sed -i -E \
+            "s#(stylesheets/(extra|print)\.css|javascripts/site\.js)\"#\1?v=$v\"#g" {} +
+          grep -c "site.js?v=$v" site/index.html
       # Phase 2: render per-project PDFs + manifest.json into site/pdf/
       # - run: python scripts/build_pdfs.py
       - uses: actions/upload-pages-artifact@v3
