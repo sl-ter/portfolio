@@ -4,14 +4,17 @@ Writes overrides/partials/hero-grid.html and overrides/partials/hero-drawing.htm
 Two drawings are available; pick one with ART below, then run:
     .venv/bin/python scripts/make_hero_art.py
 
-  network — a decentralised mesh: nodes pop in, links grow between neighbours as both ends
-            appear, then one route lights up hop by hop (the accent), on a dot grid
+  network — a decentralised mesh of filled nodes: nodes pop in and links grow between them as
+            both ends appear; then site.js loops random signal routes across it (the accent),
+            on a dot grid
   pcb    — a board layout: MCU fanning traces out to flash, resistors, crystal, vias and a
            JTAG header (the TCK line is the accent), on a dot grid
   flange — a dimensioned flange drawing (bolt circle, centre lines, A–A cut), on a line grid
 
 Classes: `draw` strokes draw themselves in on load; everything else fades in after. The network
-times each element itself (`pop`, `grow`, `late` with --d delays) to stage its build-up.
+times each element itself (`pop`, `grow` with --d delays) to stage its build-up, and tags nodes
+(data-i, data-r) and links (data-a, data-b) so site.js can route signals over them; the svg's
+data-intro says when the build-up ends.
 Colours come from CSS (docs/stylesheets/extra.css), so both drawings follow light/dark mode.
 """
 
@@ -24,10 +27,10 @@ OUT = Path(__file__).resolve().parent.parent / "overrides" / "partials"
 W, H = 1600, 900
 
 
-def svg(cls, body, align="xMaxYMid"):
+def svg(cls, body, align="xMaxYMid", attrs=""):
     return (
         f'<svg class="{cls}" viewBox="0 0 {W} {H}" preserveAspectRatio="{align} slice" '
-        f'aria-hidden="true">\n' + "\n".join(body) + "\n</svg>\n"
+        f'aria-hidden="true"{attrs}>\n' + "\n".join(body) + "\n</svg>\n"
     )
 
 
@@ -88,11 +91,10 @@ def dot_grid():
 # ---------------------------------------------------------------- network
 
 def network(seed=11):
-    import heapq
     import random
 
     rng = random.Random(seed)
-    x0, y0, x1, y1, spacing = 760, 80, 1570, 850, 78
+    x0, y0, x1, y1, spacing = 760, 90, 1570, 840, 96
 
     # Poisson-disk sampling (Bridson): evenly spread but irregular, no node closer than `spacing`
     cell = spacing / 2 ** 0.5
@@ -114,7 +116,7 @@ def network(seed=11):
     while active:
         ax, ay = active[rng.randrange(len(active))]
         for _ in range(30):
-            t, r = rng.uniform(0, 2 * pi), rng.uniform(spacing, 2 * spacing)
+            t, r = rng.uniform(0, 2 * pi), rng.uniform(spacing, 1.8 * spacing)
             x, y = ax + r * cos(t), ay + r * sin(t)
             if x0 <= x <= x1 and y0 <= y <= y1 and fits(x, y):
                 add(x, y)
@@ -122,84 +124,47 @@ def network(seed=11):
         else:
             active.remove((ax, ay))
 
-    # Gabriel graph: link two nodes when no other node sits inside the circle on their segment.
-    # Every node links only to near neighbours, so there are no hubs, just a peer-to-peer mesh.
     n = len(pts)
     dist = lambda a, b: ((pts[a][0] - pts[b][0]) ** 2 + (pts[a][1] - pts[b][1]) ** 2) ** 0.5
-    edges = []
+
+    # Links: a Gabriel graph (near neighbours, no hubs) for the mesh, plus some second-ring links
+    # that reach past a neighbour and cross others, for the redundant, robust look of a
+    # decentralised network
+    edges = set()
     for a in range(n):
         for b in range(a + 1, n):
-            if dist(a, b) > 2.2 * spacing:
+            if dist(a, b) > 2.0 * spacing:
                 continue
             mx, my = (pts[a][0] + pts[b][0]) / 2, (pts[a][1] + pts[b][1]) / 2
             r2 = (dist(a, b) / 2) ** 2
-            if all((pts[c][0] - mx) ** 2 + (pts[c][1] - my) ** 2 >= r2 for c in range(n) if c not in (a, b)):
-                edges.append((a, b))
-    adj = {i: [] for i in range(n)}
-    for a, b in edges:
-        adj[a].append(b); adj[b].append(a)
+            gabriel = all((pts[c][0] - mx) ** 2 + (pts[c][1] - my) ** 2 >= r2
+                          for c in range(n) if c not in (a, b))
+            if gabriel or rng.random() < 0.18:
+                edges.add((a, b))
+    edges = sorted(edges)
 
-    # Route: shortest path from lower left to upper right, both ends clear of the hero's bottom
-    # fade (y > ~600 fades out) and of the edges, so the whole route reads
-    src = min((i for i in range(n) if pts[i][1] <= 600), key=lambda i: pts[i][0] - pts[i][1])
-    dst = max((i for i in range(n) if pts[i][0] <= 1400 and pts[i][1] >= 160),
-              key=lambda i: pts[i][0] - pts[i][1])
-    best, prev, heap = {src: 0}, {}, [(0, src)]
-    while heap:
-        d, u = heapq.heappop(heap)
-        if u == dst:
-            break
-        for v in adj[u]:
-            nd = d + dist(u, v)
-            if nd < best.get(v, 1e9):
-                best[v], prev[v] = nd, u
-                heapq.heappush(heap, (nd, v))
-    route = [dst]
-    while route[-1] != src:
-        route.append(prev[route[-1]])
-    route.reverse()
-
-    # Timeline: nodes pop in random order; each link grows from the newer node to the older
-    # one as soon as both exist; once the whole mesh is up, the route builds hop by hop.
+    # Build-up: nodes pop in random order; each link grows from the newer node to the older
+    # one as soon as both exist
     order = list(range(n)); rng.shuffle(order)
     pop = {node: 0.15 + 1.1 * k / n for k, node in enumerate(order)}
-    link_t = 0.45
-    links, net_done = [], 0
+    radius = {i: round(rng.uniform(5.5, 8.5), 1) for i in range(n)}
+    link_t, intro = 0.45, 0
+    d = ['<g class="net-links">']
     for a, b in edges:
         new, old = (a, b) if pop[a] >= pop[b] else (b, a)
         start = pop[new] + 0.12
-        net_done = max(net_done, start + link_t)
-        links.append((new, old, start))
-
-    d = []
-    for new, old, start in links:
+        intro = max(intro, start + link_t)
         d.append(path([pts[new], pts[old]], "link grow").replace(
-            "/>", f' style="--d: {start:.2f}s; --t: {link_t}s"/>'))
-
-    t, step, hop_t = net_done + 0.3, 0.3, 0.22
-    hops = [(route[0], t)]
-    for u, v in zip(route, route[1:]):
-        d.append(path([pts[u], pts[v]], "route grow").replace(
-            "/>", f' style="--d: {t + 0.06:.2f}s; --t: {hop_t}s"/>'))
-        t += step
-        hops.append((v, t))
-
+            "/>", f' data-a="{a}" data-b="{b}" style="--d: {start:.2f}s; --t: {link_t}s"/>'))
+    d.append('</g>')
+    d.append('<g class="net-signal"></g>')  # site.js draws the looping routes here
+    d.append('<g class="net-nodes">')
     for i, (x, y) in enumerate(pts):
-        d.append(f'<circle class="node pop" cx="{x:.1f}" cy="{y:.1f}" r="7" style="--d: {pop[i]:.2f}s"/>')
-    for node, when in hops:
-        x, y = pts[node]
-        d.append(f'<circle class="hop pop" cx="{x:.1f}" cy="{y:.1f}" r="7" style="--d: {when:.2f}s"/>')
-    for node, when in (hops[0], hops[-1]):
-        x, y = pts[node]
-        d.append(f'<circle class="hop-ring pop" cx="{x:.1f}" cy="{y:.1f}" r="15" style="--d: {when:.2f}s"/>')
-    # hop count, placed past the destination along the route's final heading so it never sits on it
-    (px, py), (x, y) = pts[route[-2]], pts[dst]
-    ux, uy = (x - px) / dist(route[-2], dst), (y - py) / dist(route[-2], dst)
-    anchor = "start" if ux >= 0 else "end"
-    d.append(f'<text class="tag late" x="{x + 26 * ux + (8 if ux >= 0 else -8):.1f}" '
-             f'y="{y + 26 * uy + 7:.1f}" text-anchor="{anchor}" style="--d: {t + 0.15:.2f}s">'
-             f'{len(route) - 1} hops</text>')
-    return svg("pf-hero__drawing", d)
+        d.append(f'<circle class="node pop" cx="{x:.1f}" cy="{y:.1f}" r="{radius[i]}" '
+                 f'data-i="{i}" style="--d: {pop[i]:.2f}s"/>')
+    d.append('</g>')
+    d.append('<g class="net-hops"></g>')     # route nodes light up here, above the plain nodes
+    return svg("pf-hero__drawing", d, attrs=f' data-intro="{intro:.2f}"')
 
 
 # ---------------------------------------------------------------- pcb

@@ -41,7 +41,7 @@
       <div class="pf-hero__content md-typeset" data-depth="-0.08" style="--depth: -0.08">
         <h1>Sam Linnington</h1>
         <p>{{ config.site_description }}</p>
-        <a href="{{ 'projects/' | url }}" class="md-button md-button--primary">See the projects</a>
+        <a href="{{ 'projects/' | url }}" class="md-button md-button--primary">Projects</a>
         <a href="{{ 'pdf-builder/' | url }}" class="md-button">Portfolio as a PDF</a>
       </div>
     </div>
@@ -55,14 +55,18 @@
         {% for p in projects if p.file.src_uri == org.project %}{% set ns.p = p %}{% endfor %}
         <article class="pf-spotlight">
           <div class="pf-spotlight__media">
+            {% if org.url %}<a href="{{ org.url }}" tabindex="-1" aria-hidden="true">{% endif %}
             {% if org.image %}
               <img src="{{ org.image | url }}" alt="{{ org.name }}" loading="lazy">
             {% else %}
               {{ placeholder(org.name, "wide") }}
             {% endif %}
+            {% if org.url %}</a>{% endif %}
           </div>
           <div class="pf-spotlight__body">
-            <h3>{{ org.name }}</h3>
+            <h3>
+              {% if org.url %}<a href="{{ org.url }}" class="pf-external">{{ org.name }}</a>{% else %}{{ org.name }}{% endif %}
+            </h3>
             {% if org.blurb %}<p>{{ org.blurb }}</p>{% endif %}
             {% if ns.p %}
               <p class="pf-meta">{{ meta_line(ns.p) }}</p>

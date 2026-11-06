@@ -29,7 +29,8 @@ Wrap anything that shouldn't appear in the PDF (video, 3D viewers) in `<div clas
 - `overrides/main.html`: renders the project header (hero, title, tagline, duration, role, skill chips)
   for any page whose front matter has `duration`.
 - `scripts/make_hero_art.py`: regenerates the hero linework (`overrides/partials/hero-*.html`).
-  Drawings: `network` (default: decentralised mesh, staged build-up, one highlighted route),
+  Drawings: `network` (default: decentralised mesh that builds itself; `site.js` then loops
+  random orange signal routes across it),
   `pcb` and `flange`; switch with `ART` at the top of the script.
 - `scripts/make_logo.py`: regenerates the header mark and favicon (`mitsudomoe` default, or
   `flange`). Needs `shapely` in the venv (`.venv/bin/pip install shapely`); the site build doesn't.

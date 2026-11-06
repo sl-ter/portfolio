@@ -5,6 +5,7 @@
 //     (extra.css handles the rest on the compositor).
 //  3. Smooth in-page jumps: table-of-contents links, footnotes, back-to-top.
 //  4. The header logo turns with the scroll.
+//  5. Hero network: signal routes loop across the mesh after it builds itself.
 const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches
 const cssParallax = CSS.supports("animation-timeline: view()")
 
@@ -29,19 +30,25 @@ if (!reducedMotion()) {
   else window.addEventListener("scroll", () => spinLogo(window.scrollY), { passive: true })
 }
 
-let teardown = () => {}
+// Per-page setup; everything registered here is torn down when instant navigation swaps pages
+let teardowns = []
 
 document$.subscribe(() => {
   // navigation.instant swapped the page: let Lenis re-measure it, re-sync the logo
   if (lenis) lenis.resize()
   if (!reducedMotion()) spinLogo(window.scrollY)
 
-  teardown()
-  teardown = () => {}
+  teardowns.forEach(fn => fn())
+  teardowns = []
 
   const hero = document.querySelector(".pf-hero")
-  if (!hero || cssParallax || reducedMotion()) return
+  if (!hero || reducedMotion()) return
+  const network = hero.querySelector(".pf-hero__drawing[data-intro]")
+  if (network) teardowns.push(startSignals(hero, network))
+  if (!cssParallax) teardowns.push(parallaxFallback(hero))
+})
 
+function parallaxFallback(hero) {
   const layers = [...hero.querySelectorAll("[data-depth]")]
   let queued = false
   const update = () => {
@@ -56,8 +63,131 @@ document$.subscribe(() => {
   }
   window.addEventListener("scroll", onScroll, { passive: true })
   update()
-  teardown = () => window.removeEventListener("scroll", onScroll)
-})
+  return () => window.removeEventListener("scroll", onScroll)
+}
+
+// Hero network: once the mesh has built itself, signals keep routing across it. A random path
+// lights up node by node and link by link, holds, then dies out one piece at a time from its
+// start, and the next route begins as the previous one starts to fade. Pauses while the hero is
+// off-screen or the tab is hidden.
+const SVG_NS = "http://www.w3.org/2000/svg"
+const HOP_MS = 240      // between successive hops lighting up
+const HOLD_MS = 450     // fully lit before it starts dying out
+const FADE_MS = 140     // between successive pieces dying out
+const VISIBLE_Y = 620   // keep routes above the hero's bottom fade (viewBox units)
+
+function startSignals(hero, svg) {
+  const nodes = [...svg.querySelectorAll(".node")].map(c => ({
+    x: +c.getAttribute("cx"), y: +c.getAttribute("cy"), r: +c.getAttribute("r"),
+  }))
+  const adj = nodes.map(() => [])
+  for (const link of svg.querySelectorAll(".link")) {
+    const a = +link.dataset.a, b = +link.dataset.b
+    adj[a].push(b)
+    adj[b].push(a)
+  }
+  const linkLayer = svg.querySelector(".net-signal")
+  const hopLayer = svg.querySelector(".net-hops")
+
+  const timers = new Set()
+  const later = (fn, ms) => {
+    const t = setTimeout(() => { timers.delete(t); fn() }, ms)
+    timers.add(t)
+  }
+
+  // Random route: breadth-first search from a random source with neighbours shuffled, so the
+  // path is a shortest one but a different one each time; target 4–7 hops away
+  const pickRoute = () => {
+    const visible = nodes.flatMap((n, i) => (n.y < VISIBLE_Y ? [i] : []))
+    for (let tries = 0; tries < 20; tries++) {
+      const src = visible[Math.floor(Math.random() * visible.length)]
+      const prev = new Map([[src, -1]])
+      const depth = new Map([[src, 0]])
+      const queue = [src]
+      while (queue.length) {
+        const u = queue.shift()
+        for (const v of [...adj[u]].sort(() => Math.random() - 0.5)) {
+          if (prev.has(v)) continue
+          prev.set(v, u)
+          depth.set(v, depth.get(u) + 1)
+          queue.push(v)
+        }
+      }
+      const targets = [...depth].filter(([i, d]) => d >= 4 && d <= 7 && nodes[i].y < VISIBLE_Y)
+      if (!targets.length) continue
+      let v = targets[Math.floor(Math.random() * targets.length)][0]
+      const route = [v]
+      while (prev.get(v) !== -1) route.push((v = prev.get(v)))
+      return route.reverse()
+    }
+    return null
+  }
+
+  const lightNode = (i, pieces) => {
+    const n = nodes[i]
+    const dot = document.createElementNS(SVG_NS, "circle")
+    dot.setAttribute("class", "hop")
+    dot.setAttribute("cx", n.x)
+    dot.setAttribute("cy", n.y)
+    dot.setAttribute("r", n.r + 1.5)
+    hopLayer.append(dot)
+    dot.animate([{ transform: "scale(0)" }, { transform: "scale(1)" }],
+      { duration: 280, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" })
+    pieces.push(dot)
+  }
+
+  const lightLink = (i, j, pieces) => {
+    const a = nodes[i], b = nodes[j]
+    const line = document.createElementNS(SVG_NS, "path")
+    line.setAttribute("class", "signal")
+    line.setAttribute("pathLength", "1")
+    line.setAttribute("d", `M${a.x},${a.y}L${b.x},${b.y}`)
+    linkLayer.append(line)
+    line.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }],
+      { duration: HOP_MS * 0.85, easing: "ease-out", fill: "forwards" })
+    pieces.push(line)
+  }
+
+  let paused = false, idle = false
+  const send = () => {
+    if (paused) { idle = true; return }
+    const route = pickRoute()
+    if (!route) return
+    const pieces = []
+    lightNode(route[0], pieces)
+    for (let k = 1; k < route.length; k++) {
+      later(() => lightLink(route[k - 1], route[k], pieces), HOP_MS * (k - 1) + 60)
+      later(() => lightNode(route[k], pieces), HOP_MS * k)
+    }
+    const lit = HOP_MS * (route.length - 1) + HOLD_MS
+    later(() => {
+      pieces.forEach((el, k) => later(() => {
+        el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 320, fill: "forwards" })
+          .finished.then(() => el.remove(), () => el.remove())
+      }, FADE_MS * k))
+      later(send, 260) // next route starts as this one begins to fade
+    }, lit)
+  }
+
+  const resume = () => {
+    paused = document.hidden || !onScreen
+    if (!paused && idle) { idle = false; send() }
+  }
+  let onScreen = true
+  const observer = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; resume() })
+  observer.observe(hero)
+  document.addEventListener("visibilitychange", resume)
+  later(send, parseFloat(svg.dataset.intro) * 1000 + 300)
+
+  return () => {
+    timers.forEach(clearTimeout)
+    timers.clear()
+    observer.disconnect()
+    document.removeEventListener("visibilitychange", resume)
+    linkLayer.replaceChildren()
+    hopLayer.replaceChildren()
+  }
+}
 
 const smoothScrollTo = (target, offset = 0) => {
   if (lenis) lenis.scrollTo(target, { offset })

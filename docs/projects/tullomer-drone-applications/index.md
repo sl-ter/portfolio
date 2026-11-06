@@ -1,5 +1,5 @@
 ---
-title: Tullomer Drone
+title: Tullomer in Drone Applications
 duration: July - Sept 2026
 role: Solo R&D at Z Polymers
 skills:

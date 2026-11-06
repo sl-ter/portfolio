@@ -2,8 +2,8 @@
 
 Largest projects first.
 
-1. [Tullomer Drone](tullomer-drone/index.md)
-2. [3D Pellet Printer](pellet-printer/index.md)
+1. [Tullomer in Drone Applications](tullomer-drone-applications/index.md)
+2. [FGF 3D Printing](fgf-3d-printing/index.md)
 3. [Activity Classification & Distance Tracker Wearable](activity-wearable/index.md)
 4. [NixOS Config](nixos-config/index.md)
 5. [EWB Project](ewb/index.md)

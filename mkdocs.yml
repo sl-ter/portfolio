@@ -93,13 +93,16 @@ extra:
       link: mailto:samuel.linnington@tufts.edu
       name: Email
 
-  # Home-page spotlights, in order. `project` is the linked project's source path.
+  # Home-page spotlights, in order. `url` is the organisation's site; `project` is the linked
+  # project's source path.
   affiliations:
-    - name: Nemitz Robotics Group
-      project: projects/pellet-printer/index.md
+    - name: The Nemitz Robotics Group
+      url: https://sites.tufts.edu/nemitz/activities/
+      project: projects/fgf-3d-printing/index.md
       blurb: ""
     - name: Z Polymers
-      project: projects/tullomer-drone/index.md
+      url: https://z-polymers.com/
+      project: projects/tullomer-drone-applications/index.md
       blurb: ""
 
 # Project order = site order = PDF builder order.
@@ -107,8 +110,8 @@ nav:
   - Home: index.md
   - Projects:
       - projects/index.md
-      - Tullomer Drone: projects/tullomer-drone/index.md
-      - 3D Pellet Printer: projects/pellet-printer/index.md
+      - Tullomer in Drone Applications: projects/tullomer-drone-applications/index.md
+      - FGF 3D Printing: projects/fgf-3d-printing/index.md
       - Activity Classification & Distance Tracker Wearable: projects/activity-wearable/index.md
       - NixOS Config: projects/nixos-config/index.md
       - EWB Project: projects/ewb/index.md
