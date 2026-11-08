@@ -1,7 +1,7 @@
 ---
 title: Activity Classification & Distance Tracker Wearable
 duration: Oct – Nov 2026
-role: Course project, ME193 (AI in Mobile Robotics)
+role: Solo course project, ME193 (AI in Mobile Robotics)
 skills:
   - Embedded systems (Arduino UNO Q)
   - IMU sensor integration
@@ -18,7 +18,7 @@ deep_dives: []
 !!! abstract "TL;DR"
     Built a shin-worn wearable on an Arduino UNO Q that tells standing, walking, running and
     air-biking apart (99% correct on people it never trained on) and counts steps with an
-    8,721-weight neural network, within 2.0% median error on new people. It streams live to a
+    8,721-weight neural network, within about 2% median error on new people. It streams live to a
     dashboard that turns the count into a distance estimate with an honest error range.
 
 ## Challenge
@@ -69,7 +69,7 @@ an estimate of how far you walked, with a range for how sure it is.
 
     activity classification accuracy on people the model never trained on (random forest)
 
--   **2.0 %**
+-   **~2 %**
 
     median step-count error per session on new people (9 in 10 sessions within 13.5%)
 
@@ -128,7 +128,7 @@ these updates, and I trained for 25 epochs, 2,500 updates in all.
 
 As with the classifiers, I tested it leave-one-person-out: train on five people, test on the sixth,
 and repeat for everyone. Even the 0.5 cutoff was chosen using people the net hadn't trained on. On
-those new people it gets a median count error of 2.0% per session (against 2.6% for the earlier
+those new people it gets a median count error of about 2% per session (against 2.6% for the earlier
 rule-based counter), and 9 out of 10 sessions are within 13.5%. The trained weights are saved to a
 file and run on the UNO Q in plain numpy, matching PyTorch to within 0.000000007, so steps show up
 on the dashboard live, about 1.3 s after they happen.
