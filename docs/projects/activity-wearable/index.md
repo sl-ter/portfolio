@@ -137,7 +137,7 @@ height is entered, it assumes someone between 155 and 195 cm. That makes the unc
 about ±20% walking, and wider running. Calibration tightens the range, bringing it down to about
 ±8%, plus the net's own counting error (about 2% median, and within 13.5% for 9 out of 10 sessions).
 
-### Watching it learn
+### CNN Learning
 
 A [timelapse of the training process](https://sl-ter.github.io/me193/ActivityWearable/timelapse.html){ .pf-external }
 shows what training actually does. I re-ran one round with one participant's recordings held out
