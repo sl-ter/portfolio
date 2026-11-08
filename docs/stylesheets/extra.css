@@ -40,7 +40,6 @@
 .md-typeset video,
 .md-typeset model-viewer,
 .md-typeset .pf-project__hero,
-.pf-spotlight__media,
 .pf-card__media {
   border: 4px solid var(--pf-photo-border);
   border-radius: var(--pf-radius);
@@ -348,31 +347,32 @@ html.lenis body {
   transform: translateX(0.25em);
 }
 
-/* Spotlights: alternating media / text, the way Material's landing page does features */
-.pf-spotlight {
+/* Organizational affiliations: text only, side by side */
+.pf-orgs {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 2.4rem;
-  align-items: center;
-  margin: 0 0 2.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.6rem 2.4rem;
 }
 
-.pf-spotlight:nth-of-type(even) .pf-spotlight__media {
-  order: 2;
+.md-typeset .pf-org h3 {
+  margin: 0;
+  font-size: 1.4rem;
 }
 
-.pf-spotlight__media > a {
-  display: block;
+.md-typeset .pf-org h3 a {
+  color: inherit;
 }
 
-.pf-spotlight__media,
+.md-typeset .pf-org h3 a:is(:hover, :focus) {
+  color: var(--md-typeset-a-color);
+}
+
 .pf-card__media {
   display: block;
   overflow: hidden;
   border-radius: var(--pf-radius);
 }
 
-.pf-spotlight__media img,
 .pf-card__media img {
   display: block;
   width: 100%;
@@ -381,23 +381,9 @@ html.lenis body {
   transition: transform 400ms ease;
 }
 
-.pf-spotlight__media:hover img,
 .pf-card a:is(:hover, :focus) img,
 .pf-next__card:is(:hover, :focus) img {
   transform: scale(1.03);
-}
-
-.md-typeset .pf-spotlight h3 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-.md-typeset .pf-spotlight h3 a {
-  color: inherit;
-}
-
-.md-typeset .pf-spotlight h3 a:is(:hover, :focus) {
-  color: var(--md-typeset-a-color);
 }
 
 /* Links that leave the site get a small north-east arrow */
@@ -407,17 +393,6 @@ html.lenis body {
   font-size: 0.7em;
   vertical-align: 0.35em;
   color: var(--md-default-fg-color--light);
-}
-
-@media screen and (max-width: 60em) {
-  .pf-spotlight {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .pf-spotlight:nth-of-type(even) .pf-spotlight__media {
-    order: 0;
-  }
 }
 
 /* Placeholder until a project has a hero image: a drafting-sheet panel */

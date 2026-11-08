@@ -35,20 +35,11 @@
   <section class="pf-section md-typeset">
     <div class="md-grid">
       <h2>Organizational affiliations</h2>
-      {% for org in config.extra.affiliations %}
-        {% set ns = namespace(p=None) %}
-        {% for p in projects if p.file.src_uri == org.project %}{% set ns.p = p %}{% endfor %}
-        <article class="pf-spotlight">
-          <div class="pf-spotlight__media">
-            {% if org.url %}<a href="{{ org.url }}" tabindex="-1" aria-hidden="true">{% endif %}
-            {% if org.image %}
-              <img src="{{ org.image | url }}" alt="{{ org.name }}" loading="lazy">
-            {% else %}
-              {{ pf.placeholder(org.name, "wide") }}
-            {% endif %}
-            {% if org.url %}</a>{% endif %}
-          </div>
-          <div class="pf-spotlight__body">
+      <div class="pf-orgs">
+        {% for org in config.extra.affiliations %}
+          {% set ns = namespace(p=None) %}
+          {% for p in projects if p.file.src_uri == org.project %}{% set ns.p = p %}{% endfor %}
+          <article class="pf-org">
             <h3>
               {% if org.url %}<a href="{{ org.url }}" class="pf-external">{{ org.name }}</a>{% else %}{{ org.name }}{% endif %}
             </h3>
@@ -57,9 +48,9 @@
               <p class="pf-meta">{{ pf.meta_line(ns.p) }}</p>
               <a class="pf-more" href="{{ ns.p.url | url }}">{{ ns.p.title }}</a>
             {% endif %}
-          </div>
-        </article>
-      {% endfor %}
+          </article>
+        {% endfor %}
+      </div>
     </div>
   </section>
 

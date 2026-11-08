@@ -8,13 +8,13 @@
 
 {% macro meta_line(p) %}{{ [p.meta.duration, p.meta.role] | select | join(" · ") }}{% endmacro %}
 
-{#- A project's card image: its hero, else the drafting-sheet placeholder -#}
+{#- A project's card image: its hero, else a "Coming soon" drafting sheet -#}
 {% macro card_media(p) %}
   <div class="pf-card__media">
     {% if p.meta.hero %}
       <img src="{{ (p.url ~ p.meta.hero) | url }}" alt="" loading="lazy">
     {% else %}
-      {{ placeholder(p.title, "card") }}
+      {{ placeholder("Coming soon", "card") }}
     {% endif %}
   </div>
 {% endmacro %}
