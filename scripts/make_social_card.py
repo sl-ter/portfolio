@@ -44,9 +44,7 @@ body {{ width: 1200px; height: 630px; overflow: hidden; position: relative; back
 .brand {{ display: flex; align-items: center; gap: 14px; margin-bottom: 40px; font-weight: 600; font-size: 22px }}
 .brand svg {{ width: 34px; height: 34px; fill: #eef0f3 }}
 h1 {{ font: 700 76px/1.05 "JetBrains Mono", monospace; letter-spacing: -0.04em }}
-.kicker {{ margin: 18px 0 22px; color: #ff4f00; font-weight: 600; font-size: 20px;
-           letter-spacing: 0.1em; text-transform: uppercase }}
-.lede {{ max-width: 600px; color: rgba(238, 240, 243, 0.78); font-size: 21px }}
+.lede {{ margin-top: 26px; max-width: 600px; color: rgba(238, 240, 243, 0.78); font-size: 21px }}
 .url {{ position: absolute; left: 72px; bottom: 44px; color: rgba(238, 240, 243, 0.55); font-size: 20px }}
 </style></head>
 <body>
@@ -54,7 +52,6 @@ h1 {{ font: 700 76px/1.05 "JetBrains Mono", monospace; letter-spacing: -0.04em }
 <div class="text">
   <div class="brand">{logo}<span>{cfg.site_name}</span></div>
   <h1>{cfg.extra["author"]}</h1>
-  <p class="kicker">Engineering Portfolio</p>
   <p class="lede">{cfg.site_description}</p>
 </div>
 <p class="url">{cfg.site_url.removeprefix("https://").rstrip("/")}</p>
