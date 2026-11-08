@@ -79,6 +79,37 @@
     content: "▶ ";
   }
 
+  /* Project header: a banner rather than a full page */
+  .md-typeset .pf-project__hero {
+    aspect-ratio: auto;
+    height: 3in;
+  }
+
+  /* Media row: the portrait clip's still in a fixed column beside the photos */
+  .md-typeset .pf-media {
+    grid-template-columns: 2in minmax(0, 1fr);
+    gap: 0.25in;
+    break-inside: avoid;
+  }
+
+  .md-typeset .pf-media figure {
+    margin: 0 0 0.15in;
+  }
+
+  .md-typeset .pf-media figure img {
+    max-height: 1.6in;
+    width: auto;
+  }
+
+  .md-typeset .pf-media .pf-still img {
+    max-height: none;
+    width: 100%;
+  }
+
+  .md-typeset .pf-media figcaption {
+    margin: 0.3em auto 0;
+  }
+
   /* Short enough to share a page with the certificate's write-up */
   .md-typeset .pf-cert {
     margin: 0.6em auto 0;

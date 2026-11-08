@@ -1,7 +1,7 @@
 ---
 title: FGF 3D Printing
-duration:
-role:
+duration: May 2026 – Present
+role: Undergrad Researcher
 skills: []
 tagline:
 hero:

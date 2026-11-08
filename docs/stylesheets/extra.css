@@ -502,7 +502,7 @@ html.lenis body {
 .pf-project__hero {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
   margin-bottom: 1.2rem;
   border-radius: var(--pf-radius);
@@ -636,9 +636,38 @@ html.lenis body {
   color: var(--md-typeset-a-color);
 }
 
+/* Full width for landscape clips; portrait (phone) clips stop at most of the window's height.
+   Give the <video> width/height attributes so its box is reserved before anything loads. */
 .md-typeset video {
-  width: 100%;
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 75vh;
   border-radius: var(--pf-radius);
+  background: var(--md-code-bg-color);
+}
+
+/* Media row: a portrait clip beside a column of stills (stacks on narrow screens) */
+.md-typeset .pf-media {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.md-typeset .pf-media figure {
+  margin: 0 0 1.2rem;
+}
+
+@media screen and (max-width: 45em) {
+  .md-typeset .pf-media {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .pf-media video {
+    margin-inline: auto;
+  }
 }
 
 /* CAD viewer: drag to orbit; the poster shows until the model loads */
