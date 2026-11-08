@@ -1,7 +1,7 @@
 ---
 title: Activity Classification & Distance Tracker Wearable
 duration: Oct – Nov 2026
-role: Solo course project, ME193 (AI in Mobile Robotics)
+role: Solo course project for ME193 (AI in Mobile Robotics)
 skills:
   - Embedded systems (Arduino UNO Q)
   - IMU sensor integration
@@ -9,30 +9,36 @@ skills:
   - Neural networks (PyTorch)
   - Data collection & labeling
   - Model validation
-  - MQTT & live dashboards
+  - MQTT
+  - Live dashboard UI
 tagline: A shin-worn wearable that tells standing, walking, running and air-biking apart, and counts every step with a neural net it runs on board.
 hero: img/wearable-setup.jpg
 deep_dives: []
 ---
 
 !!! abstract "TL;DR"
-    Built a shin-worn wearable on an Arduino UNO Q that tells standing, walking, running and
-    air-biking apart (99% correct on people it never trained on) and counts steps with an
-    8,721-weight neural network, within about 2% median error on new people. It streams live to a
-    dashboard that turns the count into a distance estimate with an honest error range.
+    Built a shin-worn wearable on an Arduino UNO Q that identifies standing, walking, running and
+    air-biking (99% correct on people it never trained on) and counts steps with an 8,721-weight
+    neural network, within about 2% median error on new people.
 
 ## Challenge
 
-The wearable had to work live for classmates, on bodies and gaits it had never seen, not just mine.
-That ruled out tuning anything by hand: every model was judged on people left out of its training.
-Counting steps added harder problems. There is no record of when a foot lands unless someone makes
-one, the phone used as a second sensor sits at an arbitrary angle in a pocket, and air-biking swings
-the leg in a steady rhythm much like walking without taking a single step. The rule-based counter I
-started with logged 106 false steps a minute while air-biking.
+My class assignment dictated that this wearable work live for classmates on bodies and gaits it had
+never seen, meaning robustness had to be planned from step one. In its first iteration, the wearable
+used a decision tree and a random forest to classify standing, walking, running and air-biking with
+two non-neural models. Its second iteration counted steps using a 1D convolutional neural network
+trained in PyTorch. To use every sensor available I added my iPhone in my left front pocket,
+coupling with the MPU-6050 on my right shin attached to my Arduino UNO Q to collect left and right
+leg data independently. Six people carried out a series of data collection steps (walking and
+running at varying paces and cadences, climbing stairs, air-biking) while I tapped F and J keys at
+every footfall. The network was trained on said taps on my laptop and then runs the weights live on
+the UNO Q, displaying movement class on the UNO Q's LED matrix as well as streaming data for the
+dashboard over MQTT. The dashboard shows the step count, the cadence, and an estimate of how far you
+walked, with a range for how sure it is.
 
 ## Labor & Results
 
-### Intro and demo
+### Demo
 
 <div class="pf-media" markdown>
 
@@ -51,17 +57,6 @@ started with logged 106 false steps a minute while air-biking.
 </div>
 
 </div>
-
-The first version of the wearable classified standing, walking, running and air-biking with two
-non-neural models, a decision tree and a random forest. The second version also counts steps,
-using a 1D convolutional neural network trained in PyTorch. To use every sensor available, I added
-my iPhone in my left front pocket alongside the MPU-6050 on my right shin, wired to an Arduino UNO
-Q, so the left and right legs are measured independently. Six people carried out a series of
-recordings (walking and running at varying paces and cadences, climbing stairs, air-biking) while I
-tapped the F and J keys at every footfall. The network was trained on those taps on my laptop, and
-the trained weights then run live on the UNO Q, which shows the movement class on its LED matrix
-and streams data to the dashboard over MQTT. The dashboard shows the step count, the cadence, and
-an estimate of how far you walked, with a range for how sure it is.
 
 <div class="grid cards metrics" markdown>
 
@@ -99,7 +94,7 @@ the shin swings, which way gravity points, and the step rhythm. It classifies mo
   <figcaption>The two activity classifiers</figcaption>
 </figure>
 
-### Counting steps with a neural net
+### Step and distance estimation with a convolutional neural network
 
 The step counter is a small neural network with 8,721 weights. For every moment (100 per second)
 it takes in 12 numbers: seven from the shin (its six sensor axes plus overall acceleration) and five

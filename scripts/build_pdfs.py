@@ -192,9 +192,7 @@ header .rule {{ flex: 1; height: 1px; background: #d5d8dd }}
 header .tag {{ color: #6b7079; font-weight: 400 }}
 h1 {{ position: absolute; top: 1.85in; left: 0.75in; font: 600 46pt/1 "IBM Plex Sans Condensed", sans-serif;
       letter-spacing: -0.01em }}
-.kicker {{ position: absolute; top: 2.75in; left: 0.75in; color: #ff4f00; font-weight: 600;
-           font-size: 12pt; letter-spacing: 0.08em; text-transform: uppercase }}
-.lede {{ position: absolute; top: 3.2in; left: 0.75in; width: 5.6in; color: #3c4048; font-size: 12pt }}
+.lede {{ position: absolute; top: 2.75in; left: 0.75in; width: 5.6in; color: #3c4048; font-size: 12pt }}
 footer {{ position: absolute; left: 0.75in; right: 0.75in; bottom: 0.75in;
           display: flex; justify-content: space-between; align-items: flex-end; font-size: 9.5pt }}
 footer a {{ color: #b83a00; font-weight: 600; text-decoration: none }}
@@ -206,7 +204,6 @@ footer .site a {{ display: block }}
 <div class="art">{grid}{drawing}</div><div class="fade"></div><div class="fade bottom"></div>
 <header>{logo}<span>{cfg.site_name}</span><span class="rule"></span><span class="tag">{built:%B %Y}</span></header>
 <h1>{cfg.extra["author"]}</h1>
-<p class="kicker">Engineering Portfolio</p>
 <p class="lede">{cfg.site_description}</p>
 <footer><p class="contacts">{contact_links}</p>
 <p class="site">The full portfolio, with video and interactive models<a href="{cfg.site_url}">View it online</a></p></footer>
