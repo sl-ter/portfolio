@@ -5,13 +5,13 @@ role: Solo course project for ME193 (AI in Mobile Robotics)
 skills:
   - Embedded systems (Arduino UNO Q)
   - IMU sensor integration
-  - Machine learning (scikit-learn)
+  - Classical ML (decision trees, random forests)
   - Neural networks (PyTorch)
   - Data collection & labeling
   - Model validation
   - MQTT
   - Live dashboard UI
-tagline: A shin-worn wearable that tells standing, walking, running and air-biking apart, and counts every step with a neural net it runs on board.
+tagline: A shin-worn wearable that identifies standing, walking, running and air-biking, and counts every step with a neural net it runs on board.
 hero: img/wearable-setup.jpg
 deep_dives: []
 ---
