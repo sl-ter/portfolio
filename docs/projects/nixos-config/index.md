@@ -11,7 +11,7 @@ skills:
   - Git version control
   - Technical documentation
 tagline: My whole operating system as version-controlled code, which I can rebuild, roll back, and share across machines.
-hero: img/nixos-logo-diagram.png
+hero: img/nixos-ascii-diagram.png
 deep_dives: []
 ---
 
@@ -118,5 +118,5 @@ repartitioning.
 - Credits, as in the repo: lockscreen, fastfetch and blur recipe adapted from
   [Adarsh496/niri-noctalia-dots](https://github.com/Adarsh496/niri-noctalia-dots){ .pf-external };
   prompt based on Starship's Catppuccin preset
-- NixOS logo from [NixOS/nixos-artwork](https://github.com/NixOS/nixos-artwork/tree/master/logo){ .pf-external },
-  CC BY 4.0
+- Header image: the NixOS ASCII logo as drawn by [neofetch](https://github.com/dylanaraps/neofetch){ .pf-external } (MIT),
+  after the [NixOS logo](https://github.com/NixOS/nixos-artwork/tree/master/logo){ .pf-external } (CC BY 4.0)
