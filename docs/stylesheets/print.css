@@ -54,7 +54,7 @@
     break-after: avoid;
   }
 
-  .pf-external::after {
+  .md-typeset .pf-external::after {
     content: none;
   }
 
@@ -101,7 +101,8 @@
     width: auto;
   }
 
-  .md-typeset .pf-media .pf-still img {
+  /* ...except the clip in the first column, which fills it */
+  .md-typeset .pf-media > figure .pf-still img {
     max-height: none;
     width: 100%;
   }

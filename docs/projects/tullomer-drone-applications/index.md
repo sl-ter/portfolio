@@ -23,10 +23,11 @@ deep_dives: []
 
 ## Challenge
 
-Tullomer is Z Polymers' proprietary crystalline polymer, printable on ordinary desktop 3D printers.
-With a tensile strength of 250 MPa at a sixth of steel's density, and broad resistance to
-environmental factors, it rivals traditional high-performance polymers like PEEK, PEKK, PAEK and
-Ultem, which require expensive, specialized industrial printers. On paper it is radio-frequency
+Tullomer is [Z Polymers'](https://z-polymers.com/){ .pf-external } proprietary crystalline polymer,
+printable on ordinary desktop 3D printers. In the company's words, it is "one-sixth the weight of
+steel yet up to six times stronger", and with broad resistance to environmental factors it rivals
+traditional high-performance polymers like PEEK, PEKK, PAEK and Ultem, which require expensive,
+specialized industrial printers. On paper it is radio-frequency
 transparent (dielectric constant ≈ 3), light (1.4 g/cm³) and stiff, which makes it a natural fit for
 drone frames, especially where carbon fiber's conductivity forces pilots to route antennas around
 it. At roughly $500/kg, however, against $30–80/kg for carbon-fiber reinforced nylon, it has to show
@@ -56,9 +57,9 @@ controller and more).
   <figcaption>Top plate off: the SpeedyBee F405 stack, wiring and threaded inserts in the Tullomer arms</figcaption>
 </figure>
 
-<figure markdown="span">
-  ![Onshape render of the frame: four arms, a perforated center plate, camera mount and antenna mounts](img/frame-render.png)
-  <figcaption>Onshape model of the frame</figcaption>
+<figure>
+<model-viewer src="cad/frame.glb" poster="img/frame-render.png" alt="3D model of the drone frame: four arms, a perforated center plate, camera mount and antenna mounts" camera-orbit="30deg 65deg 90%" environment-image="neutral" tone-mapping="neutral" exposure="0.7" shadow-intensity="1.2" camera-controls disable-zoom></model-viewer>
+<figcaption>Frame assembly from Onshape: drag to orbit</figcaption>
 </figure>
 
 </div>
@@ -70,8 +71,9 @@ controller and more).
 - **Design:** Adopted an open-source 5-inch modular frame
   ([Leopard FPV Drone](https://www.printables.com/model/1517629-leopard-fpv-drone){ .pf-external })
   whose arms and center plates all bolt apart, so any piece can be reprinted in a different
-  material and swapped in. Built editable Onshape models of the arms to allow future geometry
-  changes. Kept the 5-inch propeller class: small enough to fly in tight spaces, but large enough
+  material and swapped in. Built editable
+  [Onshape models of the arms](https://cad.onshape.com/documents/8715dbd739085dd50a309c9a/w/8b3b11719ed05ccb2a306301/e/e5ca05f8a3461390b5089c11){ .pf-external }
+  to allow future geometry changes. Kept the 5-inch propeller class: small enough to fly in tight spaces, but large enough
   for material tests against commercial and defense FPV platforms.
 - **FFF 3D Printing:** Printed the entire frame in Tullomer, along with several candidate parts of
   the same geometry in PLA, PETG and nylon. Parts for incumbent-material testing weren't printed

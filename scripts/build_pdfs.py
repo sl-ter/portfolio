@@ -164,9 +164,7 @@ def cover_html(cfg, built):
     grid = (partials / "hero-grid.html").read_text()
     logo = (ROOT / "overrides" / ".icons" / "pf" / "mitsudomoe.svg").read_text()
     contacts = [s for s in cfg.extra.get("social", []) if s.get("name")]
-    contact_rows = "".join(
-        f'<li><span>{s["name"]}</span>{s["link"].removeprefix("mailto:").removeprefix("https://")}</li>'
-        for s in contacts if "github" not in s["link"])
+    contact_links = "".join(f'<a href="{s["link"]}">{s["name"]}</a>' for s in contacts)
     return f"""<!doctype html>
 <html><head><meta charset="utf-8">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=block">
@@ -199,10 +197,10 @@ h1 {{ position: absolute; top: 1.85in; left: 0.75in; font: 600 46pt/1 "IBM Plex 
 .lede {{ position: absolute; top: 3.2in; left: 0.75in; width: 5.6in; color: #3c4048; font-size: 12pt }}
 footer {{ position: absolute; left: 0.75in; right: 0.75in; bottom: 0.75in;
           display: flex; justify-content: space-between; align-items: flex-end; font-size: 9.5pt }}
-footer ul {{ list-style: none }}
-footer li span {{ display: inline-block; width: 0.8in; color: #6b7079 }}
+footer a {{ color: #b83a00; font-weight: 600; text-decoration: none }}
+footer .contacts {{ display: flex; gap: 0.3in }}
 footer .site {{ text-align: right; color: #6b7079 }}
-footer .site b {{ display: block; color: #1d2026; font-weight: 500 }}
+footer .site a {{ display: block }}
 </style></head>
 <body>
 <div class="art">{grid}{drawing}</div><div class="fade"></div><div class="fade bottom"></div>
@@ -210,8 +208,8 @@ footer .site b {{ display: block; color: #1d2026; font-weight: 500 }}
 <h1>{cfg.extra["author"]}</h1>
 <p class="kicker">Engineering Portfolio</p>
 <p class="lede">{cfg.site_description}</p>
-<footer><ul>{contact_rows}</ul>
-<p class="site">The full portfolio, with video and interactive models<b>{cfg.site_url.removeprefix("https://")}</b></p></footer>
+<footer><p class="contacts">{contact_links}</p>
+<p class="site">The full portfolio, with video and interactive models<a href="{cfg.site_url}">View it online</a></p></footer>
 </body></html>"""
 
 

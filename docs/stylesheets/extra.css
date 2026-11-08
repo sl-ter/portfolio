@@ -26,11 +26,28 @@
 /* Link colours are darkened/lightened from the accent to pass AA contrast for body text */
 [data-md-color-scheme="default"] {
   --md-typeset-a-color: #b83a00;
+  --pf-photo-border: #d9dce1;
 }
 
 [data-md-color-scheme="slate"] {
   --md-hue: 215;
   --md-typeset-a-color: #ff8a52;
+  --pf-photo-border: rgba(255, 255, 255, 0.16);
+}
+
+/* Every photo, clip, 3D viewer and card image gets a thin light-grey outline */
+.md-typeset figure img,
+.md-typeset video,
+.md-typeset model-viewer,
+.md-typeset .pf-project__hero,
+.pf-spotlight__media,
+.pf-card__media {
+  border: 1px solid var(--pf-photo-border);
+}
+
+/* The certificate image draws its own frame */
+.md-typeset .pf-cert img {
+  border: 0;
 }
 
 /* ---------- Layout ---------- */
@@ -677,7 +694,8 @@ html.lenis body {
   height: auto;
   aspect-ratio: 4 / 3;
   border-radius: var(--pf-radius);
-  background: var(--md-code-bg-color);
+  /* white in both themes, to match the CAD render used as its poster and PDF still */
+  background: #fff;
   --poster-color: transparent;
 }
 
