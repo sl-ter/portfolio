@@ -80,7 +80,7 @@ walked, with a range for how sure it is.
 
 ### Classifying movement
 
-**Model 1** is a decision tree on the hardest push up the shin within each 2-second window. The
+**Model 1** is a decision tree on the hardest push up the shin within the 2-second loop. The
 model learned three cutoffs: below 1.2 g is still, below 1.7 g is bike, below 3.7 g is walk, and
 anything harder is run. It gets 80% right on people it never trained on.
 
@@ -134,8 +134,8 @@ Distance is estimated as steps × step length and shown as a range rather than a
 The step count comes from the neural net, but the board has no way to measure step length, so a
 step is estimated at about 0.37–0.45 × your height when walking and 0.5–0.8 × when running. If no
 height is entered, it assumes someone between 155 and 195 cm. That makes the uncalibrated range
-about ±20% walking, and wider running. Calibrating over a measured distance tightens the range to
-about ±8%, plus the net's own counting error.
+about ±20% walking, and wider running. Calibration tightens the range, bringing it down to about
+±8%, plus the net's own counting error (about 2% median, and within 13.5% for 9 out of 10 sessions).
 
 ### Watching it learn
 
@@ -157,4 +157,5 @@ everyone new: the net is more confident on people it has seen. Choosing it only 
 output fixed that, and leave-one-person-out testing became the rule for every number on this page.
 Next time I'd put a second IMU on the other shin instead of relying on a phone, and find a way to
 measure step length directly, since distance is now the weakest output: the count is within a few
-percent, but uncalibrated distance is only good to about ±20%.
+percent, but uncalibrated distance is only good to about ±20%. I'd also opt for designing a more
+streamlined wearable sleeve to make taking it on and off easier.
