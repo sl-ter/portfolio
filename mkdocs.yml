@@ -103,7 +103,7 @@ extra:
     - name: The Nemitz Robotics Group
       url: https://sites.tufts.edu/nemitz/activities/
       project: projects/fgf-3d-printing/index.md
-      blurb: Specialized in the design and engineering of scalable robotic systems and automated robot manufacturing.
+      blurb: Specialized in the design and automated manufacturing of scalable swarm robotic systems.
     - name: Z Polymers
       url: https://z-polymers.com/
       project: projects/tullomer-drone-applications/index.md

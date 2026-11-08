@@ -126,8 +126,7 @@ a week, an insight I wish I'd had sooner.
 
 ## Deep Dive Resources
 
-- [*Developing Tullomer in Drone Applications*](files/developing-tullomer-in-drone-applications.pdf): final report for Z Polymers, Oct 2026
-  (13 pages, PDF)
-- [Onshape models of the drone arms](https://cad.onshape.com/documents/8715dbd739085dd50a309c9a/w/8b3b11719ed05ccb2a306301/e/e5ca05f8a3461390b5089c11){ .pf-external }
-- Base frame: [Leopard FPV Drone on Printables](https://www.printables.com/model/1517629-leopard-fpv-drone){ .pf-external }
-  (credit for the open-source geometry)
+- [*Developing Tullomer in Drone Applications*](files/developing-tullomer-in-drone-applications.pdf): Comprehensive final report for Z Polymers
+- [Drone arm Onshape models](https://cad.onshape.com/documents/8715dbd739085dd50a309c9a/w/8b3b11719ed05ccb2a306301/e/e5ca05f8a3461390b5089c11){ .pf-external }
+- [Leopard FPV Drone](https://www.printables.com/model/1517629-leopard-fpv-drone){ .pf-external }:
+  Base frame credit for open-source geometry
