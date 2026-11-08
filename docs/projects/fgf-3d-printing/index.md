@@ -4,7 +4,7 @@ duration: May 2026 – Present
 role: Undergrad Researcher
 skills: []
 tagline:
-hero: img/pellet-extruder-diagram.png
+hero: img/extruder-screw-diagram.jpg
 deep_dives: []
 ---
 

@@ -706,6 +706,17 @@ html.lenis body {
   width: 100%;
 }
 
+/* A diagram or clip that reads fine smaller than the column */
+.md-typeset figure.pf-narrow {
+  max-width: min(100%, 26rem);
+}
+
+.md-typeset figure.pf-narrow img,
+.md-typeset figure.pf-narrow video {
+  width: 100%;
+  height: auto;
+}
+
 /* Media swapped between web and PDF */
 .print-only {
   display: none;

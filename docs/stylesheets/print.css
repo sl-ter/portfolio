@@ -79,10 +79,19 @@
     content: "▶ ";
   }
 
-  /* Project header: a banner rather than a full page */
+  /* Project header: a banner rather than a full page, shown whole instead of cropped to fit */
   .md-typeset .pf-project__hero {
     aspect-ratio: auto;
-    height: 3in;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 3in;
+    margin-inline: auto;
+  }
+
+  /* Small enough that one diagram or clip takes well under a third of the page */
+  .md-typeset figure.pf-narrow {
+    max-width: 3.2in;
   }
 
   /* Media row: the portrait clip's still in a fixed column beside the photos */

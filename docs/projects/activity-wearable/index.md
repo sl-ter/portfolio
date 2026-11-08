@@ -89,7 +89,7 @@ the data, that vote. They use all six sensor readings, turned into 31 measuremen
 the shin swings, which way gravity points, and the step rhythm. It classifies movement correctly
 99% of the time on people it never trained on.
 
-<figure markdown="span">
+<figure markdown="span" class="pf-narrow">
   ![Diagram of the two classifiers. Left, Model 1: a decision tree on peak shin acceleration with cutoffs at 1.20, 1.71 and 3.69 g, 80% right on new people. Right, Model 2: 100 trees voting on 31 measurements from all six IMU outputs, 99% right on new people](img/classifier-models-diagram.png)
   <figcaption>The two activity classifiers</figcaption>
 </figure>
@@ -116,7 +116,7 @@ direction that lowers it. The learning rate sets how big each nudge is: it start
 shrinks toward zero by the end, so the net settles in instead of overshooting. One epoch is 100 of
 these updates, and I trained for 25 epochs, 2,500 updates in all.
 
-<figure>
+<figure class="pf-narrow">
 <video src="img/step-counter-system.mp4" poster="img/step-counter-system.jpg" width="1280" height="720" controls preload="none" playsinline></video>
 <figcaption>Walkthrough of the step counter: sensors, inputs, network, training loop</figcaption>
 </figure>
