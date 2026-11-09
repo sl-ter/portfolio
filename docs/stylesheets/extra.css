@@ -604,6 +604,38 @@ html.lenis body {
   }
 }
 
+/* About: portrait on the left, text on the right (stacks on narrow screens) */
+.md-typeset .pf-about {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.md-typeset .pf-about__photo {
+  margin: 0;
+}
+
+.md-typeset .pf-about__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.md-typeset .pf-about__text > p:first-child {
+  margin-top: 0;
+}
+
+@media screen and (max-width: 45em) {
+  .md-typeset .pf-about {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .pf-about__photo {
+    max-width: 18rem;
+  }
+}
+
 /* TL;DR: a lead callout on the accent rule instead of Material's stock blue */
 .md-typeset .admonition.abstract {
   border: 0;
