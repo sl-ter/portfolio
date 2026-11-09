@@ -604,10 +604,11 @@ html.lenis body {
   }
 }
 
-/* About: portrait on the left, text on the right (stacks on narrow screens) */
+/* About: portrait on the left, text on the right (stacks on narrow screens). The page hides the
+   empty TOC sidebar, so the text takes the rest of the width beside a fixed-width photo. */
 .md-typeset .pf-about {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
   gap: 2rem;
   align-items: start;
 }

@@ -120,6 +120,12 @@
     margin: 0.3em auto 0;
   }
 
+  /* About: a narrower photo column so the bio fits on one page */
+  .md-typeset .pf-about {
+    grid-template-columns: 2.6in minmax(0, 1fr);
+    gap: 0.3in;
+  }
+
   /* Short enough to share a page with the certificate's write-up */
   .md-typeset .pf-cert {
     margin: 0.6em auto 0;

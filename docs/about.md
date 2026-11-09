@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # About
 
 <div class="pf-about" markdown>
